@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YOLO cuisto : détection</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="page-camera">
+  <img id="flux" class="flux-plein" src="/video_feed" alt="Image de la caméra avec les aliments détectés par YOLO">
+
+  <header class="calque calque-haut">
+    <img class="logo-mini" src="/logos/logo-fds-bleu-transparent.png" alt="Fête de la Science">
+    <div>
+      <div class="titre-mini">YOLO <span>cuisto</span></div>
+      <div class="info-equipe">Équipe <span class="pastille" id="nom-equipe"></span></div>
+    </div>
+    <img class="logo-mini" src="/logos/logo_couleur_ua.png" alt="Université des Antilles">
+  </header>
+
+  <aside class="calque calque-panneau">
+    <section>
+      <h2>🎯 Votre mission</h2>
+      <div id="carte-mission"></div>
+    </section>
+
+    <section>
+      <h2>🍽️ Mon assiette</h2>
+      <div class="mode"><span class="voyant"></span><span>Chaque aliment détecté s'ajoute à la liste.</span></div>
+      <ul id="liste" class="liste-aliments"></ul>
+
+      <div class="ajout">
+        <select id="choix-aliment" aria-label="Ajouter un aliment"></select>
+        <button type="button" id="bouton-ajouter" class="bouton bouton-petit">Ajouter</button>
+      </div>
+      <p class="aide">Un aliment oublié ? Ajoutez-le. Une erreur ? Retirez-le avec ✕ et enlevez l'objet de sous la caméra.</p>
+
+      <button type="button" id="bouton-valider" class="bouton bouton-principal bouton-large" disabled>Valider mon assiette ✅</button>
+    </section>
+  </aside>
+
+  <div class="calque calque-bas">
+    <label for="choix-camera">Caméra</label>
+    <select id="choix-camera"><option>Recherche des caméras…</option></select>
+    <span id="resolution"></span>
+    <span id="etat-camera"></span>
+  </div>
+
+  <script src="/static/js/commun.js"></script>
+  <script src="/static/js/detection.js"></script>
+</body>
+</html>

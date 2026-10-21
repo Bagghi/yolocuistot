@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YOLO cuisto : résultat</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <header class="bandeau bandeau-compact">
+    <img class="logo" src="/logos/logo-fds-bleu-transparent.png" alt="Fête de la Science">
+    <div class="titre">
+      <h1>YOLO <span>cuisto</span></h1>
+      <div class="info-equipe">Équipe <span class="pastille" id="nom-equipe"></span></div>
+    </div>
+    <img class="logo" src="/logos/logo_couleur_ua.png" alt="Université des Antilles">
+  </header>
+
+  <main>
+    <div id="chargement" class="chargement">
+      <div class="marmite" aria-hidden="true">🍲</div>
+      <p>Calcul de votre score…</p>
+    </div>
+    <p id="erreur" class="erreur" hidden></p>
+
+    <div id="contenu" class="resultat" hidden>
+      <div class="pile">
+        <section class="panneau carte-score">
+          <h2>Votre score</h2>
+          <p class="score-geant"><span id="score">0</span> <small>points</small></p>
+          <p class="aide" id="score-base"></p>
+          <div id="bonus"></div>
+        </section>
+
+        <section class="panneau">
+          <h2>📊 Votre assiette face à la fiche</h2>
+          <div id="jauges" class="jauges"></div>
+          <p class="jauge-legende">Le trait foncé marque l'objectif de la fiche.</p>
+        </section>
+
+        <section class="panneau">
+          <h2>📋 Cahier des charges de la cantine</h2>
+          <div id="cahier"></div>
+        </section>
+      </div>
+
+      <div class="pile">
+        <section class="panneau">
+          <h2>👩‍🍳 Votre recette</h2>
+          <div id="attente-recette" class="attente-recette" role="status" aria-live="polite">
+            <div class="cuisine" aria-hidden="true"><span class="ustensile">🍳</span><span class="vapeur">♨️</span></div>
+            <p id="message-attente" class="message-attente">Le chef regarde votre assiette…</p>
+            <div class="progression"><div id="barre-progression" class="barre-progression"></div></div>
+          </div>
+          <div id="recette"></div>
+          <p class="source-recette" id="source-recette"></p>
+        </section>
+
+        <section>
+          <h2>🎯 La fiche tirée</h2>
+          <div id="carte-profil" class="carte-large"></div>
+        </section>
+
+        <div class="actions">
+          <button type="button" id="bouton-terminer" class="bouton bouton-principal" disabled>Terminer 🏁</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/static/js/commun.js"></script>
+  <script src="/static/js/resultat.js"></script>
+</body>
+</html>

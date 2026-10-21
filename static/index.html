@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YOLO cuisto</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <header class="bandeau">
+    <img class="logo" src="/logos/logo-fds-bleu-transparent.png" alt="Fête de la Science">
+    <div class="titre">
+      <h1>YOLO <span>cuisto</span></h1>
+    </div>
+    <img class="logo" src="/logos/logo_couleur_ua.png" alt="Université des Antilles">
+  </header>
+
+  <main class="accueil">
+    <section class="panneau">
+      <form id="formulaire" novalidate>
+        <h2>1. Votre équipe</h2>
+        <label for="equipe">Nom de l'équipe</label>
+        <input type="text" id="equipe" maxlength="40" autocomplete="off" placeholder="Ex. : Les Toques d'Or">
+
+        <div class="etape">
+          <h2>2. La fiche tirée au stand</h2>
+          <p class="aide">Cliquez sur la carte qui correspond à votre fiche. <a class="lien" href="/profils">Voir toutes les fiches</a></p>
+          <div class="carrousel">
+            <button type="button" class="carrousel-fleche" id="fleche-precedente" aria-label="Fiches précédentes">‹</button>
+            <div id="grille-profils" class="carrousel-piste"></div>
+            <button type="button" class="carrousel-fleche" id="fleche-suivante" aria-label="Fiches suivantes">›</button>
+          </div>
+        </div>
+
+        <div class="actions actions-centre">
+          <button type="submit" id="bouton-go" class="bouton bouton-principal" disabled>Yolo ! 🚀</button>
+        </div>
+        <p id="aide-go" class="aide centre">Saisissez un nom d'équipe et choisissez votre fiche.</p>
+      </form>
+    </section>
+
+    <section class="panneau">
+      <h2>🏆 Tableau des scores</h2>
+      <div>
+        <table class="scores">
+          <thead>
+            <tr><th>#</th><th>Équipe</th><th>Fiche tirée</th><th>Recette</th><th class="nombre">Score</th></tr>
+          </thead>
+          <tbody id="corps-scores"></tbody>
+        </table>
+      </div>
+      <p id="scores-vide" class="aide" hidden>Aucune équipe pour l'instant : à vous de jouer !</p>
+      <p class="aide">Cliquez sur une équipe pour voir sa fiche et sa recette.</p>
+    </section>
+  </main>
+
+  <div id="volet" class="volet" hidden>
+    <div class="volet-fond" data-fermer></div>
+    <aside class="volet-contenu" role="dialog" aria-modal="true" aria-labelledby="volet-titre">
+      <button class="volet-fermer" data-fermer aria-label="Fermer">×</button>
+      <div id="volet-corps"></div>
+    </aside>
+  </div>
+
+  <script src="/static/js/commun.js"></script>
+  <script src="/static/js/accueil.js"></script>
+</body>
+</html>

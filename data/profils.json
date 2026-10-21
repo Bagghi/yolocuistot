@@ -1,0 +1,72 @@
+[
+  {
+    "id": "foot",
+    "nom": "Collégien qui joue au foot en club",
+    "icone": "⚽",
+    "description": "Entraînement trois fois par semaine, match le samedi.",
+    "objectifs": { "glucides": 115, "fibres": 9, "proteines": 25, "legumineuses": 80, "sucres_ajoutes_max": 10 }
+  },
+  {
+    "id": "athletisme",
+    "nom": "Lycéenne qui fait de l'athlétisme",
+    "icone": "🏃‍♀️",
+    "description": "Sprint et saut en longueur, compétition ce week-end.",
+    "objectifs": { "glucides": 120, "fibres": 8, "proteines": 25, "legumineuses": 60, "sucres_ajoutes_max": 10 }
+  },
+  {
+    "id": "musculation",
+    "nom": "Lycéen qui fait de la musculation",
+    "icone": "🏋️",
+    "description": "Séance de renforcement musculaire après les cours.",
+    "objectifs": { "glucides": 110, "fibres": 9, "proteines": 35, "legumineuses": 80, "sucres_ajoutes_max": 10 }
+  },
+  {
+    "id": "croissance",
+    "nom": "Collégien en pleine poussée de croissance",
+    "icone": "📏",
+    "description": "Il a pris 8 cm cette année et a toujours faim.",
+    "objectifs": { "glucides": 95, "fibres": 9, "proteines": 30, "legumineuses": 80, "sucres_ajoutes_max": 10 }
+  },
+  {
+    "id": "vegetarienne",
+    "nom": "Élève végétarienne",
+    "icone": "🥦",
+    "description": "Ne mange ni viande ni poisson.",
+    "objectifs": { "glucides": 95, "fibres": 12, "proteines": 25, "legumineuses": 150, "sucres_ajoutes_max": 10 }
+  },
+  {
+    "id": "revisions",
+    "nom": "Élève qui révise le brevet ou le bac",
+    "icone": "📚",
+    "description": "Examen blanc cet après-midi, besoin de concentration.",
+    "objectifs": { "glucides": 90, "fibres": 11, "proteines": 25, "legumineuses": 80, "sucres_ajoutes_max": 5 }
+  },
+  {
+    "id": "sans_petit_dejeuner",
+    "nom": "Élève qui saute le petit-déjeuner",
+    "icone": "⏰",
+    "description": "Le déjeuner est son premier vrai repas de la journée.",
+    "objectifs": { "glucides": 110, "fibres": 11, "proteines": 28, "legumineuses": 80, "sucres_ajoutes_max": 10 }
+  },
+  {
+    "id": "grand_appetit",
+    "nom": "Ado au grand appétit",
+    "icone": "🍽️",
+    "description": "Toujours le premier à demander du rab.",
+    "objectifs": { "glucides": 100, "fibres": 13, "proteines": 28, "legumineuses": 150, "sucres_ajoutes_max": 10 }
+  },
+  {
+    "id": "sport_apres_midi",
+    "nom": "Élève qui a sport l'après-midi",
+    "icone": "🏐",
+    "description": "Deux heures d'EPS juste après la cantine.",
+    "objectifs": { "glucides": 115, "fibres": 7, "proteines": 25, "legumineuses": 40, "sucres_ajoutes_max": 10 }
+  },
+  {
+    "id": "long_trajet",
+    "nom": "Élève qui se lève à 5 h pour un long trajet",
+    "icone": "🚌",
+    "description": "Une heure et demie de bus matin et soir.",
+    "objectifs": { "glucides": 110, "fibres": 11, "proteines": 25, "legumineuses": 80, "sucres_ajoutes_max": 10 }
+  }
+]

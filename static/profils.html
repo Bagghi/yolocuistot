@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YOLO cuisto : les fiches</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <header class="bandeau bandeau-compact">
+    <img class="logo" src="/logos/logo-fds-bleu-transparent.png" alt="Fête de la Science">
+    <div class="titre">
+      <h1>YOLO <span>cuisto</span></h1>
+      <p>Les fiches du stand</p>
+    </div>
+    <img class="logo" src="/logos/logo_couleur_ua.png" alt="Université des Antilles">
+  </header>
+
+  <nav class="liens"><a href="/">← Retour à l'accueil</a></nav>
+
+  <main class="fiches">
+    <section class="panneau section-fiches">
+      <h2>🎯 Les fiches profils</h2>
+      <p class="aide">Objectifs nutritionnels pour un déjeuner.</p>
+      <div id="grille-profils" class="grille-profils" style="margin-top:14px"></div>
+    </section>
+
+    <section class="panneau section-fiches">
+      <h2>📋 Les fiches aliments</h2>
+      <p class="aide">Apports pour une portion, et nombre maximum de portions par assiette (cahier des charges de la cantine).</p>
+      <div style="overflow-x:auto">
+        <table class="tableau-aliments">
+          <thead>
+            <tr>
+              <th>Aliment</th><th>Portion</th><th class="nombre">Max / assiette</th>
+              <th class="nombre">Glucides</th><th class="nombre">Fibres</th><th class="nombre">Protéines</th><th class="nombre">Légumineuses</th>
+            </tr>
+          </thead>
+          <tbody id="corps-aliments"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/js/commun.js"></script>
+  <script>
+    (async () => {
+      const [profils, aliments] = await Promise.all([api("/api/profils"), api("/api/aliments")]);
+      document.getElementById("grille-profils").innerHTML = profils.map((p) => carteProfil(p)).join("");
+      document.getElementById("corps-aliments").innerHTML = [...aliments]
+        .sort((a, b) => a.nom.localeCompare(b.nom, "fr"))
+        .map((a) => `
+          <tr>
+            <td>${esc(a.nom)}</td>
+            <td>${esc(a.unite_portion)}</td>
+            <td class="nombre">${a.portion_max}</td>
+            ${CATEGORIES.map(([cle]) => `<td class="nombre">${nombre(a.apports[cle], 1)} g</td>`).join("")}
+          </tr>`).join("");
+    })();
+  </script>
+</body>
+</html>
