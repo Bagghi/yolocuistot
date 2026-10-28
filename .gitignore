@@ -32,3 +32,6 @@ desktop.ini
 
 # Liste des aliments (document interne)
 liste_aliments.pdf
+
+# Export autonome de la page des fiches (outils/exporter_fiches.py)
+fiches_yolocuistot.html
