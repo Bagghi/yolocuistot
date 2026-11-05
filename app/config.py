@@ -18,15 +18,19 @@ MODELE_YOLO = "yoloe-26l-seg.pt"  # téléchargé automatiquement au premier lan
                                   # Tailles : n, s, m, l, x. Sur la RTX 4060 : l ≈ 47 img/s, x ≈ 32 img/s.
 PROMPTS_TEXTE = True              # True : YOLOE pré-entraîné guidé par le champ "prompt_yolo" des fiches aliments.
                                   # False : modèle réentraîné dont les classes sont directement les "classe_yolo".
-RESOLUTION_CAMERA = (1920, 1080)   # demandée à la caméra (sans réglage, OpenCV prend 640x480 et peut rogner l'image)
+RESOLUTION_CAMERA = (1280, 720)   # demandée à la caméra (sans réglage, OpenCV prend 640x480 et peut rogner l'image)
 TAILLE_IMAGE_YOLO = 960          # côté le plus long de l'image vue par YOLO. 960 ou 1280 : petits objets mieux vus, mais plus lent
 SEUIL_CONFIANCE = 0.25
 DEVICE = None                     # None = automatique (carte graphique si disponible), "cpu" pour forcer le processeur
+DEMI_PRECISION = True             # calcul en 16 bits sur la carte graphique : presque 2 fois plus rapide, même détection
+COEURS_CPU = list(range(12))      # cœurs du processeur réservés à l'appli. i9-13900H : 0 à 11 = cœurs rapides,
+                                  # 12 à 19 = cœurs économes (Windows y envoie l'appli quand le navigateur est devant).
+                                  # None = laisser Windows choisir (à mettre sur un autre ordinateur).
 DELAI_ARRET_CAMERA = 5            # secondes après la fermeture de la page détection avant d'éteindre la caméra
 LISSAGE_IMAGES = 10              # nombre d'images sur lesquelles on lisse le comptage en direct
 
 # Score
-CATEGORIES_SCORE = ["glucides", "fibres", "proteines", "legumineuses"]
+CATEGORIES_SCORE = ["glucides", "fibres", "proteines", "lipides"]
 BONUS_BON_PROFIL = 50             # points ajoutés si le profil le plus proche de l'assiette est le profil tiré
 
 # Recette : inventée par un modèle de langage. Les fournisseurs sont essayés dans l'ordre ;

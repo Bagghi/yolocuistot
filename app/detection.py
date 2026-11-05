@@ -1,7 +1,9 @@
-"""Lecture de la webcam et détection des aliments avec YOLOE, dans un thread de fond.
+"""Lecture de la webcam et détection des aliments avec YOLOE, dans deux threads de fond.
 
-Le thread garde en mémoire la dernière image annotée (JPEG) et le comptage lissé
-des aliments ; le serveur web les lit quand le navigateur les demande.
+Le thread caméra lit les images au rythme de la webcam, y dessine les derniers cadres
+trouvés et garde la dernière image annotée (JPEG). Le thread YOLO travaille à son propre
+rythme sur l'image la plus récente : la vidéo reste fluide même si YOLO est plus lent.
+Le serveur web lit l'image et le comptage lissé des aliments quand le navigateur les demande.
 Si le modèle ou la caméra ne sont pas disponibles, l'application reste utilisable :
 les élèves peuvent ajouter les aliments à la main.
 """
@@ -17,11 +19,13 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 from . import donnees
-from .config import (CAMERA_INDEX, DELAI_ARRET_CAMERA, DEVICE, DOSSIER_DONNEES, LISSAGE_IMAGES, MODELE_YOLO,
-                     PROMPTS_TEXTE, RESOLUTION_CAMERA, SEUIL_CONFIANCE,
+from .config import (CAMERA_INDEX, DELAI_ARRET_CAMERA, DEMI_PRECISION, DEVICE, DOSSIER_DONNEES, LISSAGE_IMAGES,
+                     MODELE_YOLO, PROMPTS_TEXTE, RESOLUTION_CAMERA, SEUIL_CONFIANCE,
                      TAILLE_IMAGE_YOLO)
 
 journal = logging.getLogger(__name__)
+
+PRECISION = 16 if DEMI_PRECISION else None  # 16 bits sur la carte graphique, sinon 32 bits
 
 COULEURS = [
     (230, 25, 75), (60, 180, 75), (255, 225, 25), (0, 130, 200), (245, 130, 48),
@@ -47,7 +51,14 @@ class Detecteur:
         self._actif = False
         self._thread = None
         self._police = _police(22)
+        self._etiquettes = {}
         self._noms = {}
+        # Échange entre le thread caméra et le thread YOLO.
+        self._image_brute = None          # dernière image de la caméra, à analyser
+        self._nouvelle_image = threading.Event()
+        self._detections = []             # derniers cadres trouvés, dessinés sur chaque image
+        self._session = 0                 # change à chaque fermeture de caméra : les résultats en cours sont ignorés
+        self._nb_yolo = 0                 # nombre de détections faites, pour mesurer la vitesse de YOLO
         self.camera_index = CAMERA_INDEX
         self.resolution = None
         self._derniere_activite = float("-inf")
@@ -159,7 +170,7 @@ class Detecteur:
                 classes = [modele.names[i] for i in sorted(modele.names)]
             # Première prédiction « à vide » : la carte graphique est prête quand la page s'ouvre.
             modele.predict(np.zeros((RESOLUTION_CAMERA[1], RESOLUTION_CAMERA[0], 3), np.uint8),
-                           imgsz=TAILLE_IMAGE_YOLO, device=DEVICE, verbose=False)
+                           imgsz=TAILLE_IMAGE_YOLO, device=DEVICE, quantize=PRECISION, verbose=False)
             return modele, classes
         except Exception as erreur:  # modèle introuvable, téléchargement impossible, etc.
             self.message_modele = f"Modèle YOLOE indisponible : {erreur}"
@@ -189,9 +200,11 @@ class Detecteur:
 
     def _boucle(self):
         self.etat = "chargement"
-        self._publier(self._image_message("Chargement du modèle..."), Counter())
+        self._publier_image(self._image_message("Chargement du modèle..."))
         self._tester_cameras()  # avant le modèle : la liste des caméras est disponible tout de suite
         modele, classes = self._charger_modele()
+        if modele:
+            threading.Thread(target=self._boucle_yolo, args=(modele, classes), name="yolo", daemon=True).start()
         sans_image = set()  # caméras qui n'ont rien envoyé avec le format forcé : on les ouvrira sans réglage
 
         while self._actif:
@@ -204,7 +217,7 @@ class Detecteur:
                 continue
 
             index = self.camera_index
-            self._publier(self._image_message("Démarrage de la caméra..."), Counter())
+            self._publier_image(self._image_message("Démarrage de la caméra..."))
             camera = self._ouvrir_camera(index, forcer_format=index not in sans_image)
             if camera is None:
                 self._attendre_autre_camera(index, f"Caméra n°{index} introuvable")
@@ -215,6 +228,7 @@ class Detecteur:
             self.etat = "détection" if modele else "caméra seule"
             self.message_camera = ""
             images_recues, echecs = 0, 0
+            debut_mesure, images_mesure, yolo_mesure = time.monotonic(), 0, self._nb_yolo
             try:
                 while self._actif and self.camera_index == index and self._page_ouverte():
                     ok, image = camera.read()
@@ -225,9 +239,17 @@ class Detecteur:
                         time.sleep(0.05)
                         continue
                     images_recues, echecs = images_recues + 1, 0
-                    detections = self._detecter(modele, classes, image) if modele else []
-                    comptes = Counter(classe for classe, _, _ in detections)
-                    self._publier(self._dessiner(image, detections), comptes)
+                    with self._verrou:
+                        self._image_brute = image
+                    self._nouvelle_image.set()
+                    self._publier_image(self._dessiner(image, self._detections))
+                    # Vitesse réelle dans le journal toutes les 10 s, pour repérer un ordinateur bridé.
+                    images_mesure += 1
+                    duree = time.monotonic() - debut_mesure
+                    if duree >= 10:
+                        journal.info("Vidéo : %.1f images/s | YOLO : %.1f détections/s",
+                                     images_mesure / duree, (self._nb_yolo - yolo_mesure) / duree)
+                        debut_mesure, images_mesure, yolo_mesure = time.monotonic(), 0, self._nb_yolo
             finally:
                 camera.release()
                 journal.info("Caméra %s fermée", index)
@@ -235,6 +257,9 @@ class Detecteur:
                 with self._verrou:
                     self._historique.clear()
                     self._comptes = {}
+                    self._image_brute = None
+                    self._detections = []
+                    self._session += 1
                 time.sleep(0.3)  # laisse Windows libérer la caméra avant une éventuelle réouverture
 
             if echecs > 60:
@@ -247,16 +272,42 @@ class Detecteur:
         self.etat = "sans caméra"
         self.message_camera = (f"{texte}. Choisissez-en une autre ou ajoutez les aliments à la main. "
                                "Si NVIDIA Broadcast est ouvert, il peut bloquer la webcam.")
-        self._publier(self._image_message(texte), Counter())
+        self._publier_image(self._image_message(texte))
         # On réessaie toutes les 2 s, ou tout de suite si une autre caméra est choisie.
         for _ in range(20):
             if not self._actif or self.camera_index != index or not self._page_ouverte():
                 break
             time.sleep(0.1)
 
+    def _boucle_yolo(self, modele, classes):
+        """Détection en continu sur l'image la plus récente de la caméra.
+
+        Les images arrivées pendant une détection sont sautées : YOLO n'accumule pas de retard.
+        """
+        while self._actif:
+            if not self._nouvelle_image.wait(timeout=0.5):
+                continue
+            self._nouvelle_image.clear()
+            with self._verrou:
+                image, session = self._image_brute, self._session
+            if image is None:
+                continue
+            try:
+                detections = self._detecter(modele, classes, image)
+            except Exception:
+                journal.exception("Erreur pendant la détection")
+                time.sleep(1)
+                continue
+            self._nb_yolo += 1
+            with self._verrou:
+                if session != self._session:  # caméra fermée ou changée pendant la détection
+                    continue
+                self._detections = detections
+                self._ajouter_comptes(Counter(classe for classe, _, _ in detections))
+
     def _detecter(self, modele, classes, image):
         resultat = modele.predict(image, imgsz=TAILLE_IMAGE_YOLO, conf=SEUIL_CONFIANCE,
-                                  device=DEVICE, verbose=False)[0]
+                                  device=DEVICE, quantize=PRECISION, verbose=False)[0]
         detections = []
         for boite in resultat.boxes:
             indice = int(boite.cls)
@@ -269,18 +320,32 @@ class Detecteur:
     def _dessiner(self, image, detections):
         if not detections:
             return image
-        # Dessin avec Pillow pour afficher les accents (OpenCV ne les gère pas).
-        toile = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-        dessin = ImageDraw.Draw(toile)
+        image = image.copy()  # l'image brute est peut-être en cours d'analyse par YOLO
+        hauteur_image, largeur_image = image.shape[:2]
         for classe, confiance, (x1, y1, x2, y2) in detections:
             couleur = COULEURS[hash(classe) % len(COULEURS)]
-            dessin.rectangle((x1, y1, x2, y2), outline=couleur, width=4)
-            texte = f"{self._noms.get(classe, classe)} {confiance:.0%}"
-            g, h, d, b = dessin.textbbox((0, 0), texte, font=self._police)
-            haut = max(y1 - (b - h) - 10, 0)
-            dessin.rectangle((x1, haut, x1 + (d - g) + 12, haut + (b - h) + 10), fill=couleur)
-            dessin.text((x1 + 6, haut + 5 - h), texte, fill=(255, 255, 255), font=self._police)
-        return cv2.cvtColor(np.array(toile), cv2.COLOR_RGB2BGR)
+            cv2.rectangle(image, (x1, y1), (x2, y2), couleur[::-1], 4)
+            etiquette = self._etiquette(f"{self._noms.get(classe, classe)} {confiance:.0%}", couleur)
+            x1 = max(x1, 0)
+            haut = max(y1 - etiquette.shape[0], 0)
+            h = min(etiquette.shape[0], hauteur_image - haut)
+            l = min(etiquette.shape[1], largeur_image - x1)
+            if h > 0 and l > 0:
+                image[haut:haut + h, x1:x1 + l] = etiquette[:h, :l]
+        return image
+
+    def _etiquette(self, texte, couleur):
+        """Étiquette (fond coloré, texte blanc), gardée en mémoire.
+
+        Dessinée avec Pillow pour afficher les accents (OpenCV ne les gère pas).
+        """
+        cle = (texte, couleur)
+        if cle not in self._etiquettes:
+            g, h, d, b = self._police.getbbox(texte)
+            toile = Image.new("RGB", (d - g + 12, b - h + 10), couleur)
+            ImageDraw.Draw(toile).text((6, 5 - h), texte, fill=(255, 255, 255), font=self._police)
+            self._etiquettes[cle] = cv2.cvtColor(np.array(toile), cv2.COLOR_RGB2BGR)
+        return self._etiquettes[cle]
 
     def _image_message(self, texte):
         largeur, hauteur = 960, 540
@@ -290,22 +355,24 @@ class Detecteur:
                               font=self._police, anchor="mm", align="center")
         return cv2.cvtColor(np.array(toile), cv2.COLOR_RGB2BGR)
 
-    def _publier(self, image, comptes):
+    def _publier_image(self, image):
         ok, jpeg = cv2.imencode(".jpg", image, [cv2.IMWRITE_JPEG_QUALITY, 80])
-        with self._verrou:
-            if ok:
+        if ok:
+            with self._verrou:
                 self._image_jpeg = jpeg.tobytes()
-            # Lissage : médiane sur les dernières images, pour éviter qu'un aliment
-            # apparaisse et disparaisse à chaque image.
-            self._historique.append(comptes)
-            classes = set().union(*self._historique)
-            lisses = {}
-            for classe in classes:
-                valeurs = sorted(h.get(classe, 0) for h in self._historique)
-                mediane = valeurs[len(valeurs) // 2]
-                if mediane > 0:
-                    lisses[classe] = mediane
-            self._comptes = lisses
+
+    def _ajouter_comptes(self, comptes):
+        """Lissage : médiane sur les dernières détections, pour éviter qu'un aliment
+        apparaisse et disparaisse à chaque image. À appeler avec le verrou pris."""
+        self._historique.append(comptes)
+        classes = set().union(*self._historique)
+        lisses = {}
+        for classe in classes:
+            valeurs = sorted(h.get(classe, 0) for h in self._historique)
+            mediane = valeurs[len(valeurs) // 2]
+            if mediane > 0:
+                lisses[classe] = mediane
+        self._comptes = lisses
 
 
 detecteur = Detecteur()

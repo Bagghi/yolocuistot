@@ -4,7 +4,7 @@ const CATEGORIES = [
   ["glucides", "Glucides"],
   ["fibres", "Fibres"],
   ["proteines", "Protéines"],
-  ["legumineuses", "Légumineuses"],
+  ["lipides", "Lipides"],
 ];
 
 // État de la partie en cours (équipe, fiche, assiette), conservé entre les pages.

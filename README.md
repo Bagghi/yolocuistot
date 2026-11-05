@@ -50,7 +50,7 @@ et les sciences de l'éducation (la cantine comme lieu d'apprentissage et de dé
 - **Développer l'esprit critique** : l'IA peut se tromper (un aliment caché, mal orienté ou inconnu du modèle).
   Les élèves corrigent eux-mêmes la liste détectée.
 - **Sensibiliser à l'équilibre alimentaire** : composer un repas en fonction des besoins d'une personne
-  (glucides, fibres, protéines, légumineuses) et des règles d'une cantine (portions maximales).
+  (glucides, fibres, protéines, lipides) et des règles d'une cantine (portions maximales).
 - **Vivre une décision collective** : le groupe doit se mettre d'accord sur la composition de l'assiette.
 - **Montrer la recherche en action** : relier une activité concrète à plusieurs disciplines scientifiques,
   y compris les sciences humaines et sociales.
@@ -162,7 +162,7 @@ Tous les réglages sont regroupés dans [`app/config.py`](app/config.py) :
 Les fiches sont dans le dossier [`data/`](data/) et peuvent être modifiées sans toucher au code :
 
 - [`profils.json`](data/profils.json) : les 10 fiches profils et leurs objectifs nutritionnels ;
-- [`aliments.json`](data/aliments.json) : environ 170 aliments, avec leur nom, le texte cherché par YOLOE (`prompt_yolo`),
+- [`aliments.json`](data/aliments.json) : environ 140 aliments, avec leur nom, le texte cherché par YOLOE (`prompt_yolo`),
   leurs apports, leur portion maximale et l'indication des bases d'entraînement qui les contiennent (`connu_yolo`) ;
 - [`cahier_des_charges.json`](data/cahier_des_charges.json) : règles de la cantine.
 
@@ -189,7 +189,7 @@ FDS_yolocuistot/
 ## Le calcul du score
 
 1. On additionne les apports de tous les aliments de l'assiette (en tenant compte des quantités).
-2. Pour chaque catégorie (glucides, fibres, protéines, légumineuses), on mesure l'écart en grammes avec l'objectif de la fiche :
+2. Pour chaque catégorie (glucides, fibres, protéines, lipides), on mesure l'écart en grammes avec l'objectif de la fiche :
    `|objectif − total|`.
 3. L'écart total est la somme de ces écarts.
 4. Le score de base est `(somme des objectifs − écart total) / somme des objectifs × 100` (minimum 0) :

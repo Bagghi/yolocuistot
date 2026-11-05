@@ -338,13 +338,13 @@ LIVRE = [
                 "Hacher finement {g1}, puis mélanger avec l'avocat et une pincée de sel.",
                 "Bien mélanger et servir aussitôt."]},
     {"titre": "Tartine avocat-œuf", "service": "plat",
-     "requis": [["pain", "baguette", "toast", "pain_mais"], ["avocat"], ["oeuf"]],
+     "requis": [["pain", "toast", "pain_mais"], ["avocat"], ["oeuf"]],
      "en_plus": ["le jus d'un demi-citron", "sel et poivre"],
      "etapes": ["Faire griller {g0}.",
                 "Écraser l'avocat avec le citron, le sel et le poivre, puis l'étaler sur le pain.",
                 "Cuire l'œuf (dur ou au plat) et le poser sur la tartine."]},
     {"titre": "Burger maison", "service": "plat",
-     "requis": [["petit_pain", "pain", "hamburger"], ["steak_hache", "boeuf", "steak", "poulet"],
+     "requis": [["petit_pain", "pain"], ["steak_hache", "boeuf", "steak", "poulet"],
                 ["salade", "tomate", "fromage", "oignon", "cornichon"]],
      "en_plus": ["1 cuillère de ketchup ou de moutarde"],
      "etapes": ["Cuire {g1} à la poêle, 3 minutes de chaque côté.",
@@ -358,7 +358,7 @@ LIVRE = [
                 "Réchauffer {g0} quelques secondes à la poêle.",
                 "Garnir avec la viande et la sauce, puis rouler bien serré."]},
     {"titre": "Sandwich jambon-crudités", "service": "plat",
-     "requis": [["baguette", "pain", "petit_pain"], ["jambon"]],
+     "requis": [["pain", "petit_pain"], ["jambon"]],
      "en_plus": ["1 noix de beurre"],
      "etapes": ["Ouvrir {g0} en deux et le tartiner de beurre.",
                 "Garnir avec le jambon et les crudités de l'assiette.",
@@ -412,16 +412,12 @@ def _plat_sale(elements):
         par_cat.setdefault(a["categorie"], []).append(a)
     noms = lambda cat: [a["nom"] for a in par_cat.get(cat, [])]
     proteines, legumineuses, feculents = noms("proteine"), noms("legumineuse"), noms("feculent")
-    legumes, plats, autres = noms("legume"), noms("plat"), noms("laitier") + noms("condiment")
+    legumes, autres = noms("legume"), noms("laitier") + noms("condiment")
     avec_legumes = (" aux légumes" if len(legumes) > 1 else f" et {legumes[0]}") if legumes else ""
     service, en_plus = "plat", ["1 filet d'huile", "sel et poivre"]
     geres = set()  # catégories cuisinées par l'assemblage : leur préparation de base n'est pas répétée
 
-    if plats:
-        titre = f"{_majuscule(plats[0])} maison"
-        etapes = [f"Garnir avec {_les(legumes)} en fines tranches."] if legumes else []
-        geres = {"legume"}
-    elif legumineuses:
+    if legumineuses:
         titre = f"Curry {_de(legumineuses[0])}{avec_legumes}"
         en_plus += ["1 oignon", "1 cuillère à café de curry", "10 cl de lait de coco"]
         etapes = ["Faire revenir l'oignon et le curry dans un filet d'huile.",
@@ -473,7 +469,7 @@ def _plat_sale(elements):
     else:
         titre = f"Assiette {_de(autres[0])}" if autres else "Assiette du chef"
         etapes = []
-    if autres and (plats or legumineuses or proteines or feculents or legumes):
+    if autres and (legumineuses or proteines or feculents or legumes):
         etapes.append(f"Ajouter {_les(autres)} au moment de servir.")
 
     # Les préparations de base (cuire le riz...) d'abord, puis l'assemblage.
