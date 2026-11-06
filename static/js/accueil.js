@@ -5,14 +5,14 @@ let scores = [];
 let profilChoisi = null;
 
 const champEquipe = document.getElementById("equipe");
-const carrousels = [...document.querySelectorAll(".carrousel")];
+const grilles = [...document.querySelectorAll(".grille-profils")];
 const boutonGo = document.getElementById("bouton-go");
 const volet = document.getElementById("volet");
 
 function afficherProfils() {
-  for (const carrousel of carrousels) {
-    carrousel.querySelector(".carrousel-piste").innerHTML = profils
-      .filter((p) => p.public === carrousel.dataset.public)
+  for (const grille of grilles) {
+    grille.innerHTML = profils
+      .filter((p) => p.public === grille.dataset.public)
       .map((p) => carteProfil(p, { cliquable: true, selectionnee: p.id === profilChoisi }))
       .join("");
   }
@@ -25,8 +25,7 @@ function mettreAJourBouton() {
 function choisirProfil(carte) {
   if (!carte) return;
   profilChoisi = carte.dataset.id;
-  // On change seulement les classes (sans redessiner) pour garder la position des carrousels.
-  document.querySelectorAll(".carrousel .carte-profil").forEach((c) => {
+  document.querySelectorAll(".grille-profils .carte-profil").forEach((c) => {
     const choisie = c.dataset.id === profilChoisi;
     c.classList.toggle("selectionnee", choisie);
     c.setAttribute("aria-pressed", choisie);
@@ -34,30 +33,15 @@ function choisirProfil(carte) {
   mettreAJourBouton();
 }
 
-// --- Carrousels des fiches (élèves, professionnels) ------------------------------
-
-function mettreAJourFleches() {
-  for (const carrousel of carrousels) {
-    const piste = carrousel.querySelector(".carrousel-piste");
-    carrousel.querySelector(".fleche-precedente").disabled = piste.scrollLeft <= 2;
-    carrousel.querySelector(".fleche-suivante").disabled = piste.scrollLeft + piste.clientWidth >= piste.scrollWidth - 2;
-  }
-}
-
-for (const carrousel of carrousels) {
-  const piste = carrousel.querySelector(".carrousel-piste");
-  carrousel.querySelector(".fleche-precedente").addEventListener("click", () => piste.scrollBy({ left: -piste.clientWidth * 0.8, behavior: "smooth" }));
-  carrousel.querySelector(".fleche-suivante").addEventListener("click", () => piste.scrollBy({ left: piste.clientWidth * 0.8, behavior: "smooth" }));
-  piste.addEventListener("scroll", mettreAJourFleches, { passive: true });
-  piste.addEventListener("click", (e) => choisirProfil(e.target.closest(".carte-profil")));
-  piste.addEventListener("keydown", (e) => {
+for (const grille of grilles) {
+  grille.addEventListener("click", (e) => choisirProfil(e.target.closest(".carte-profil")));
+  grille.addEventListener("keydown", (e) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       choisirProfil(e.target.closest(".carte-profil"));
     }
   });
 }
-window.addEventListener("resize", mettreAJourFleches);
 
 champEquipe.addEventListener("input", mettreAJourBouton);
 
@@ -127,11 +111,10 @@ async function demarrer() {
   try {
     profils = await api("/api/profils");
   } catch (erreur) {
-    carrousels[0].querySelector(".carrousel-piste").innerHTML = `<p class="erreur">Impossible de charger les fiches : ${esc(erreur.message)}</p>`;
+    grilles[0].innerHTML = `<p class="erreur">Impossible de charger les fiches : ${esc(erreur.message)}</p>`;
     return;
   }
   afficherProfils();
-  mettreAJourFleches();
   chargerScores();
   setInterval(chargerScores, 15000);
 }

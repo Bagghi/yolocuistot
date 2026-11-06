@@ -115,3 +115,38 @@ function htmlRecette(recette) {
         </div>`).join("")}
     </div>`;
 }
+
+// --- Agrandissement des fiches au survol ------------------------------------
+// La carte grandit assez pour qu'on lise son texte, sans sortir de l'écran (ni du volet des scores).
+
+const LARGEUR_SURVOL = 440;
+const MARGE_SURVOL = 8;
+
+// Point fixe de l'agrandissement : le milieu de la carte, décalé si elle sortirait de la zone.
+function ancrageSurvol(debut, taille, min, max, echelle) {
+  const surplus = echelle - 1;
+  if (surplus <= 0) return taille / 2;
+  let ancrage = Math.min(taille / 2, (debut - min) / surplus);
+  ancrage = Math.max(ancrage, taille - (max - debut - taille) / surplus);
+  return Math.min(Math.max(ancrage, 0), taille);
+}
+
+document.addEventListener("pointerover", (e) => {
+  const carte = e.target.closest?.(".carte-image");
+  if (!carte || carte.contains(e.relatedTarget)) return;
+  const volet = carte.closest(".volet-contenu")?.getBoundingClientRect();
+  const zone = {
+    left: (volet?.left ?? 0) + MARGE_SURVOL,
+    right: (volet?.right ?? innerWidth) - MARGE_SURVOL,
+    top: MARGE_SURVOL,
+    bottom: innerHeight - MARGE_SURVOL,
+  };
+  const largeur = carte.offsetWidth;
+  const hauteur = carte.offsetHeight;
+  const echelle = Math.max(1, Math.min(LARGEUR_SURVOL / largeur, (zone.right - zone.left) / largeur, (zone.bottom - zone.top) / hauteur));
+  const rect = carte.getBoundingClientRect();
+  const x = ancrageSurvol(rect.left, largeur, zone.left, zone.right, echelle);
+  const y = ancrageSurvol(rect.top, hauteur, zone.top, zone.bottom, echelle);
+  carte.style.setProperty("--echelle-survol", echelle);
+  carte.style.transformOrigin = `${x}px ${y}px`;
+});

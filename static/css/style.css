@@ -34,26 +34,24 @@ h2 { font-size: 1.35rem; color: var(--marine); }
 /* --- Bandeau ------------------------------------------------------------ */
 .bandeau {
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  padding: 12px 28px;
+  padding: 6px 20px;
   background: var(--surface);
-  border-bottom: 5px solid var(--bleu);
+  border-bottom: 3px solid var(--bleu);
   box-shadow: var(--ombre);
 }
-.bandeau .logo { height: 72px; width: auto; }
+.bandeau .logo { height: 40px; width: auto; }
 .bandeau .titre { text-align: center; flex: 1; }
 .titre-logo { display: flex; align-items: center; justify-content: center; gap: 14px; }
-.bandeau .logo-yolo { height: 110px; width: auto; }
-.bandeau h1 { font-size: 2.4rem; color: var(--marine); margin: 0; letter-spacing: .02em; }
+.logo-yolo, .logo-mini-yolo { border-radius: 50%; background: #fff; border: 2px solid var(--bordure); }
+.bandeau .logo-yolo { height: 50px; width: auto; }
+.bandeau h1 { font-size: 2rem; color: var(--marine); margin: 0; letter-spacing: .02em; }
 .bandeau h1 span { color: var(--orange); }
-.bandeau p { margin: 0; color: var(--texte-doux); font-size: 1.1rem; }
-.bandeau-compact { padding: 8px 20px; }
-.bandeau-compact .logo { height: 48px; }
-.bandeau-compact h1 { font-size: 1.7rem; }
-.bandeau-compact .logo-yolo { height: 64px; }
+.bandeau p { margin: 0; color: var(--texte-doux); font-size: 1rem; }
 .info-equipe {
   display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center;
   margin-top: 4px; font-size: 1rem; color: var(--texte-doux);
 }
+.titre-logo .info-equipe { margin-top: 0; font-size: 1.15rem; }
 .pastille {
   display: inline-block; padding: 2px 12px; border-radius: 999px;
   background: var(--surface-2); color: var(--marine); font-weight: 600;
@@ -74,9 +72,7 @@ main { padding: 20px 28px 40px; max-width: 1800px; margin: 0 auto; }
 @media (max-width: 1100px) {
   .resultat { grid-template-columns: 1fr; }
   main { padding: 16px; }
-  .bandeau { padding: 10px 16px; }
-  .bandeau .logo { height: 48px; }
-  .bandeau h1 { font-size: 1.6rem; }
+  .bandeau { padding: 4px 16px; }
 }
 
 /* --- Formulaires et boutons --------------------------------------------- */
@@ -108,14 +104,14 @@ input[type="text"]:focus, select:focus { outline: none; border-color: var(--bleu
 .erreur { color: var(--rouge); font-weight: 600; }
 
 /* --- Cartes profils ----------------------------------------------------- */
-.grille-profils { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+.grille-profils { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
 .carte-profil {
   position: relative;
   background: var(--surface); border: 3px solid var(--bordure); border-radius: var(--rayon);
   padding: 14px 16px; display: flex; flex-direction: column; gap: 6px;
 }
-.carte-profil.cliquable { cursor: pointer; transition: transform .1s ease, border-color .15s ease; }
-.carte-profil.cliquable:hover { transform: translateY(-2px); border-color: var(--bleu-fds); }
+.carte-profil.cliquable { cursor: pointer; }
+.carte-profil.cliquable:hover { border-color: var(--bleu-fds); }
 .carte-profil.cliquable:focus-visible { outline: 3px solid var(--bleu); outline-offset: 2px; }
 .carte-profil.selectionnee { border-color: var(--orange); background: #fff6f0; box-shadow: 0 0 0 3px rgba(200, 86, 26, .25); }
 .carte-profil.selectionnee::after {
@@ -123,32 +119,19 @@ input[type="text"]:focus, select:focus { outline: none; border-color: var(--bleu
   background: var(--orange); color: #fff; width: 28px; height: 28px; border-radius: 50%;
   display: grid; place-items: center; font-weight: 700;
 }
-.carte-image { padding: 0; overflow: hidden; }
+.carte-image { padding: 0; overflow: hidden; transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; }
+/* --echelle-survol et le point d'ancrage sont calculés dans commun.js pour rester dans l'écran. */
+.carte-image:hover { transform: scale(var(--echelle-survol, 2)); transition-delay: .1s; z-index: 5; box-shadow: 0 12px 40px rgba(0, 0, 0, .4); }
 .carte-image img { display: block; width: 100%; height: auto; }
-.carte-image.selectionnee::after { top: auto; bottom: 10px; width: 40px; height: 40px; font-size: 1.3rem; }
-.titre-carrousel { margin: 14px 0 0; font-size: 1.05rem; color: var(--marine); }
+.carte-image.selectionnee::after { top: auto; bottom: 8px; right: 8px; width: 30px; height: 30px; font-size: 1.05rem; }
+.titre-groupe { margin: 18px 0 10px; font-size: 1.05rem; color: var(--marine); }
 
-/* Carrousel des fiches sur l'accueil */
-.carrousel { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
-.carrousel-piste {
-  flex: 1; min-width: 0; display: flex; gap: 14px;
-  overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-left: 4px; scroll-behavior: smooth;
-  padding: 8px 4px 12px; scrollbar-width: none;
-}
-.carrousel-piste::-webkit-scrollbar { display: none; }
-.carrousel-piste .carte-profil { flex: 0 0 300px; scroll-snap-align: start; }
-.carrousel-fleche {
-  flex: 0 0 auto; width: 48px; height: 48px; border-radius: 50%;
-  border: 2px solid var(--marine); background: var(--surface); color: var(--marine);
-  font-size: 1.8rem; line-height: 1; cursor: pointer; display: grid; place-items: center;
-}
-.carrousel-fleche:hover:not(:disabled) { background: var(--surface-2); }
-.carrousel-fleche:disabled { opacity: .25; cursor: default; }
 .carte-profil h3 { font-size: 1.02rem; color: var(--marine); margin: 0; }
 .carte-objectifs { list-style: none; margin: auto 0 0; padding: 6px 0 0; display: grid; gap: 3px; font-size: .9rem; }
 .carte-objectifs li { display: flex; justify-content: space-between; gap: 8px; white-space: nowrap; border-bottom: 1px dashed var(--bordure); }
 .carte-objectifs strong { color: var(--marine); }
-.carte-large { max-width: 420px; }
+.carte-large { max-width: 250px; }
+.volet-contenu .carte-image { max-width: 250px; }
 
 /* --- Tableau des scores ------------------------------------------------- */
 table { width: 100%; border-collapse: collapse; }
@@ -194,7 +177,6 @@ td.nombre, th.nombre { text-align: right; font-variant-numeric: tabular-nums; }
   display: flex; align-items: center; gap: 10px; padding: 8px 12px;
   border: 2px solid var(--bordure); border-radius: 10px; background: var(--surface);
 }
-.liste-aliments li.depasse { border-color: var(--ambre); background: #fff9e8; }
 .liste-aliments .nom { flex: 1; font-weight: 600; text-transform: capitalize; }
 .liste-aliments .nom small { display: block; font-weight: 400; color: var(--texte-doux); text-transform: none; }
 .liste-aliments .quantite { min-width: 2ch; text-align: center; font-weight: 800; font-size: 1.2rem; }
@@ -214,14 +196,12 @@ td.nombre, th.nombre { text-align: right; font-variant-numeric: tabular-nums; }
 }
 .calque-haut {
   top: 14px; left: 14px; display: flex; align-items: center; gap: 22px;
-  padding: 10px 24px; min-width: 460px; justify-content: space-between;
+  padding: 6px 16px; min-width: 400px; justify-content: space-between;
 }
-.logo-mini { height: 46px; width: auto; }
-.logo-mini-yolo { height: 58px; background: #fff; border-radius: 10px; padding: 2px; }
-.calque-haut > div { text-align: center; flex: 1; }
-.titre-mini { font-size: 1.5rem; font-weight: 800; color: var(--marine); line-height: 1.1; }
-.titre-mini span { color: var(--orange); }
-.calque-haut .info-equipe { margin-top: 4px; font-size: .95rem; }
+.logo-mini { height: 36px; width: auto; }
+.logo-mini-yolo { height: 46px; }
+.calque-haut > div { flex: 1; }
+.calque-haut .info-equipe { margin-top: 0; font-size: .95rem; justify-content: flex-start; }
 .calque-panneau {
   top: 14px; right: 14px; width: 330px; max-height: calc(100vh - 28px); overflow-y: auto;
   padding: 14px 16px; font-size: .92rem;
@@ -275,7 +255,6 @@ td.nombre, th.nombre { text-align: right; font-variant-numeric: tabular-nums; }
 .jauge-objectif { position: absolute; top: -3px; bottom: -3px; width: 3px; background: var(--marine); left: 66.67%; }
 .jauge-entete .ecart { color: var(--texte-doux); font-weight: 400; }
 .jauge-legende { font-size: .85rem; color: var(--texte-doux); margin-top: 8px; }
-.cdc-ligne { display: flex; gap: 10px; align-items: baseline; margin: 6px 0; }
 .attente-recette { text-align: center; padding: 30px 10px 20px; }
 .cuisine { position: relative; display: inline-block; font-size: 3.5rem; line-height: 1; }
 .ustensile { display: inline-block; animation: sauter-poele 1.2s ease-in-out infinite; transform-origin: 30% 80%; }
@@ -299,7 +278,7 @@ td.nombre, th.nombre { text-align: right; font-variant-numeric: tabular-nums; }
 .source-recette { font-size: .8rem; color: var(--texte-doux); }
 
 /* --- Page des fiches ---------------------------------------------------- */
-.fiches .grille-profils { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+.fiches .grille-profils { grid-template-columns: repeat(auto-fill, 210px); }
 .section-fiches + .section-fiches { margin-top: 24px; }
 .tableau-aliments td, .tableau-aliments th { font-size: .92rem; padding: 7px 8px; }
 .tableau-aliments td:first-child { text-transform: capitalize; font-weight: 600; }

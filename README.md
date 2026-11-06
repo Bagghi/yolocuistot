@@ -50,7 +50,7 @@ et les sciences de l'éducation (la cantine comme lieu d'apprentissage et de dé
 - **Développer l'esprit critique** : l'IA peut se tromper (un aliment caché, mal orienté ou inconnu du modèle).
   Les élèves corrigent eux-mêmes la liste détectée.
 - **Sensibiliser à l'équilibre alimentaire** : composer un repas en fonction des besoins d'une personne
-  (glucides, fibres, protéines, lipides) et des règles d'une cantine (portions maximales).
+  (glucides, fibres, protéines, lipides).
 - **Vivre une décision collective** : le groupe doit se mettre d'accord sur la composition de l'assiette.
 - **Montrer la recherche en action** : relier une activité concrète à plusieurs disciplines scientifiques,
   y compris les sciences humaines et sociales.
@@ -74,9 +74,9 @@ L'application est un site web qui tourne sur l'ordinateur du stand. Elle comport
 
 | Page | Adresse | Rôle |
 | --- | --- | --- |
-| **Accueil** | `/` | Nom de l'équipe, choix de la fiche tirée (un carrousel pour les élèves, un pour les professionnels), tableau des scores de la journée |
+| **Accueil** | `/` | Nom de l'équipe, choix de la fiche tirée (les élèves en haut, les professionnels en bas), tableau des scores de la journée |
 | **Détection** | `/detection` | Caméra en plein écran avec les aliments encadrés par YOLO. Chaque aliment détecté s'ajoute à la liste, que les élèves ajustent avec −, + et ✕ |
-| **Résultat** | `/resultat` | Score, comparaison de l'assiette avec les objectifs de la fiche, respect des portions, recette inventée |
+| **Résultat** | `/resultat` | Score, comparaison de l'assiette avec les objectifs de la fiche, recette inventée |
 | **Fiches** | `/profils` | Les fiches profils et les fiches aliments, en consultation |
 
 ```
@@ -161,9 +161,9 @@ Tous les réglages sont regroupés dans [`app/config.py`](app/config.py) :
 
 Les fiches sont dans le dossier [`data/`](data/) et peuvent être modifiées sans toucher au code :
 
-- [`profils_yolo_cuistot.json`](data/profils_yolo_cuistot.json) : les 12 fiches profils et leurs objectifs nutritionnels de la journée. Les images sont dans [`logos/fiches_profils_png_haute_definition/`](logos/fiches_profils_png_haute_definition/), et `python outils/generer_pdf_fiches.py` en fait des PDF A4 à imprimer ;
+- [`profils_yolo_cuistot.json`](data/profils_yolo_cuistot.json) : les 12 fiches profils et leurs objectifs nutritionnels de la journée. Les images sont dans [`logos/fiches_profils_png_haute_definition/`](logos/fiches_profils_png_haute_definition/), et `python outils/generer_pdf_fiches.py` en fait des PDF de cartes A5 à imprimer (un fichier par feuille A4 de deux cartes, logo au dos) ;
 - [`aliments.json`](data/aliments.json) : environ 140 aliments, avec leur nom, le texte cherché par YOLOE (`prompt_yolo`),
-  leurs apports, leur portion maximale et l'indication des bases d'entraînement qui les contiennent (`connu_yolo`) ;
+  leurs apports et l'indication des bases d'entraînement qui les contiennent (`connu_yolo`) ;
 - [`cahier_des_charges.json`](data/cahier_des_charges.json) : règles de la cantine.
 
 > ⚠️ Les valeurs nutritionnelles actuelles sont **provisoires** et doivent être validées avant le jour de l'atelier.
@@ -196,7 +196,6 @@ FDS_yolocuistot/
    un pourcentage de réussite, 100 pour une assiette parfaite, comparable quelle que soit la fiche tirée.
 5. **Bonus de +50 points** si, parmi toutes les fiches, celle dont l'assiette est la plus proche est bien la fiche tirée par le groupe.
 
-Le respect des portions maximales de la cantine est affiché, mais ne modifie pas le score.
 
 ## Données et vie privée
 
