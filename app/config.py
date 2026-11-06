@@ -19,8 +19,8 @@ MODELE_YOLO = "yoloe-26l-seg.pt"  # téléchargé automatiquement au premier lan
 PROMPTS_TEXTE = True              # True : YOLOE pré-entraîné guidé par le champ "prompt_yolo" des fiches aliments.
                                   # False : modèle réentraîné dont les classes sont directement les "classe_yolo".
 RESOLUTION_CAMERA = (1280, 720)   # demandée à la caméra (sans réglage, OpenCV prend 640x480 et peut rogner l'image)
-TAILLE_IMAGE_YOLO = 960          # côté le plus long de l'image vue par YOLO. 960 ou 1280 : petits objets mieux vus, mais plus lent
-SEUIL_CONFIANCE = 0.25
+TAILLE_IMAGE_YOLO = 640         # côté le plus long de l'image vue par YOLO. 960 ou 1280 : petits objets mieux vus, mais plus lent
+SEUIL_CONFIANCE = 0.40
 DEVICE = None                     # None = automatique (carte graphique si disponible), "cpu" pour forcer le processeur
 DEMI_PRECISION = True             # calcul en 16 bits sur la carte graphique : presque 2 fois plus rapide, même détection
 COEURS_CPU = list(range(12))      # cœurs du processeur réservés à l'appli. i9-13900H : 0 à 11 = cœurs rapides,
