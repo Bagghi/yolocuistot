@@ -22,31 +22,43 @@ async def cycle_de_vie(app):
     detecteur.arreter()
 
 
+# Le navigateur revérifie chaque fichier auprès du serveur : une modification du site s'affiche
+# tout de suite, au lieu de laisser Chrome réutiliser une ancienne version pendant des heures.
+SANS_CACHE = {"Cache-Control": "no-cache"}
+
+
+class FichiersSansCache(StaticFiles):
+    def file_response(self, *args, **kwargs):
+        reponse = super().file_response(*args, **kwargs)
+        reponse.headers.update(SANS_CACHE)
+        return reponse
+
+
 app = FastAPI(title="YOLO cuisto", lifespan=cycle_de_vie)
-app.mount("/static", StaticFiles(directory=DOSSIER_STATIC), name="static")
-app.mount("/logos", StaticFiles(directory=DOSSIER_LOGOS), name="logos")
+app.mount("/static", FichiersSansCache(directory=DOSSIER_STATIC), name="static")
+app.mount("/logos", FichiersSansCache(directory=DOSSIER_LOGOS), name="logos")
 
 
 # --- Pages ------------------------------------------------------------------
 
 @app.get("/", include_in_schema=False)
 def page_accueil():
-    return FileResponse(DOSSIER_STATIC / "index.html")
+    return FileResponse(DOSSIER_STATIC / "index.html", headers=SANS_CACHE)
 
 
 @app.get("/detection", include_in_schema=False)
 def page_detection():
-    return FileResponse(DOSSIER_STATIC / "detection.html")
+    return FileResponse(DOSSIER_STATIC / "detection.html", headers=SANS_CACHE)
 
 
 @app.get("/resultat", include_in_schema=False)
 def page_resultat():
-    return FileResponse(DOSSIER_STATIC / "resultat.html")
+    return FileResponse(DOSSIER_STATIC / "resultat.html", headers=SANS_CACHE)
 
 
 @app.get("/profils", include_in_schema=False)
 def page_profils():
-    return FileResponse(DOSSIER_STATIC / "profils.html")
+    return FileResponse(DOSSIER_STATIC / "profils.html", headers=SANS_CACHE)
 
 
 # --- Fiches -----------------------------------------------------------------

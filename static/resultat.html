@@ -3,15 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>YOLO cuisto : résultat</title>
+  <title>YOLO cuistot : résultat</title>
+  <link rel="icon" type="image/png" href="/logos/favicon.png">
   <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
   <header class="bandeau bandeau-compact">
     <img class="logo" src="/logos/logo-fds-bleu-transparent.png" alt="Fête de la Science">
     <div class="titre">
-      <h1>YOLO <span>cuisto</span></h1>
-      <div class="info-equipe">Équipe <span class="pastille" id="nom-equipe"></span></div>
+      <div class="titre-logo">
+        <img class="logo-yolo" src="/logos/logo_yolo_cuistot_site.png" alt="YOLO Cuistot">
+        <div class="info-equipe">Équipe <span class="pastille" id="nom-equipe"></span></div>
+      </div>
     </div>
     <img class="logo" src="/logos/logo_couleur_ua.png" alt="Université des Antilles">
   </header>
@@ -39,8 +42,8 @@
         </section>
 
         <section class="panneau">
-          <h2>📋 Cahier des charges de la cantine</h2>
-          <div id="cahier"></div>
+          <h2>🎯 La fiche tirée</h2>
+          <div id="carte-profil" class="carte-large"></div>
         </section>
       </div>
 
@@ -54,11 +57,6 @@
           </div>
           <div id="recette"></div>
           <p class="source-recette" id="source-recette"></p>
-        </section>
-
-        <section>
-          <h2>🎯 La fiche tirée</h2>
-          <div id="carte-profil" class="carte-large"></div>
         </section>
 
         <div class="actions">

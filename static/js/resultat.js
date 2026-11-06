@@ -1,4 +1,4 @@
-// Page de résultat : score, détail par catégorie, cahier des charges et recette.
+// Page de résultat : score, détail par catégorie, fiche tirée et recette.
 
 const partie = Partie.lire();
 if (!partie.equipe || !partie.profil_id || !partie.ingredients) location.replace("/");
@@ -52,12 +52,6 @@ function afficher(resultat, profil) {
         </div>
       </div>`;
   }).join("");
-
-  const cdc = resultat.cahier_des_charges;
-  document.getElementById("cahier").innerHTML = cdc.depassements.length
-    ? cdc.depassements.map((d) =>
-        `<p class="cdc-ligne">⚠️ ${esc(d.nom)} : ${d.quantite} portions (maximum ${d.portion_max})</p>`).join("")
-    : '<p class="cdc-ligne">✅ Portions maximales respectées</p>';
 
   document.getElementById("carte-profil").innerHTML = profil ? carteProfil(profil) : "";
 

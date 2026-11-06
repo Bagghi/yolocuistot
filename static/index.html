@@ -3,14 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>YOLO cuisto</title>
+  <title>YOLO cuistot</title>
+  <link rel="icon" type="image/png" href="/logos/favicon.png">
   <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
   <header class="bandeau">
     <img class="logo" src="/logos/logo-fds-bleu-transparent.png" alt="Fête de la Science">
     <div class="titre">
-      <h1>YOLO <span>cuisto</span></h1>
+      <div class="titre-logo">
+        <img class="logo-yolo" src="/logos/logo_yolo_cuistot_site.png" alt="">
+        <h1>YOLO <span>cuistot</span></h1>
+      </div>
     </div>
     <img class="logo" src="/logos/logo_couleur_ua.png" alt="Université des Antilles">
   </header>
@@ -25,11 +29,10 @@
         <div class="etape">
           <h2>2. La fiche tirée au stand</h2>
           <p class="aide">Cliquez sur la carte qui correspond à votre fiche. <a class="lien" href="/profils">Voir toutes les fiches</a></p>
-          <div class="carrousel">
-            <button type="button" class="carrousel-fleche" id="fleche-precedente" aria-label="Fiches précédentes">‹</button>
-            <div id="grille-profils" class="carrousel-piste"></div>
-            <button type="button" class="carrousel-fleche" id="fleche-suivante" aria-label="Fiches suivantes">›</button>
-          </div>
+          <h3 class="titre-groupe">🎒 Les élèves</h3>
+          <div class="grille-profils" data-public="eleve"></div>
+          <h3 class="titre-groupe">🧑‍🏫 Les professionnels</h3>
+          <div class="grille-profils" data-public="adulte"></div>
         </div>
 
         <div class="actions actions-centre">

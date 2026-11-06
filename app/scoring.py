@@ -67,25 +67,16 @@ def calculer_score(ingredients, profil_tire, profils, aliments_par_classe):
 
 
 def verifier_cahier_des_charges(ingredients, aliments_par_classe, cahier):
-    """Bilan informatif (sans effet sur le score) : budget et portions maximales."""
+    """Bilan informatif (sans effet sur le score) : budget."""
     cout = 0.0
-    depassements = []
     for ingredient in ingredients:
         aliment = aliments_par_classe.get(ingredient["classe"])
         if aliment is None:
             continue
         cout += ingredient["quantite"] * aliment["prix"]
-        if ingredient["quantite"] > aliment["portion_max"]:
-            depassements.append({
-                "nom": aliment["nom"],
-                "quantite": ingredient["quantite"],
-                "portion_max": aliment["portion_max"],
-            })
     budget = cahier["budget_par_eleve"]
     return {
         "cout": round(cout, 2),
         "budget": budget,
         "budget_respecte": cout <= budget + 1e-9,
-        "depassements": depassements,
-        "respecte": cout <= budget + 1e-9 and not depassements,
     }

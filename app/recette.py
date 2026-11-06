@@ -56,8 +56,8 @@ def construire_prompt(elements, nom_profil):
         "- Fais une seule recette si possible. Si l'assiette mélange du salé et du sucré qui ne vont pas ensemble, "
         "fais un plat et un dessert (2 recettes maximum).\n"
         "- Titre court et appétissant (5 mots maximum), comme sur une carte de restaurant.\n"
-        "- 4 à 6 étapes courtes, réalisables à la maison par un collégien avec l'aide d'un adulte.\n"
-        "- Écris en français, avec un ton simple adapté à des adolescents, en les tutoyant.\n\n"
+        "- 4 à 6 étapes courtes, réalisables à la maison par un adulte qui cuisine.\n"
+        "- Écris en français, avec un ton simple et clair, et formule les étapes à l'infinitif.\n\n"
         + FORMAT_REPONSE
     )
 
@@ -184,7 +184,7 @@ LIVRE = [
     {"titre": "Bananes rôties au chocolat", "service": "dessert",
      "requis": [["banane"], ["chocolat", "mousse_chocolat"]],
      "en_plus": ["1 noix de beurre", "1 pincée de cannelle"],
-     "etapes": ["Préchauffer le four à 180 °C (avec un adulte).",
+     "etapes": ["Préchauffer le four à 180 °C.",
                 "Ouvrir les bananes en deux dans la longueur, sans enlever la peau.",
                 "Glisser des carrés de chocolat dans la fente avec une pincée de cannelle.",
                 "Enfourner 10 minutes, jusqu'à ce que le chocolat soit fondu.",
@@ -205,7 +205,7 @@ LIVRE = [
      "requis": [["noix_coco"], ["lait", "yaourt"]],
      "en_plus": ["1 sachet de gélatine ou d'agar-agar", "1 gousse de vanille", "le zeste d'un citron vert"],
      "etapes": ["Râper la noix de coco.",
-                "Faire chauffer {g1} avec la coco râpée, la vanille et le zeste de citron vert (avec un adulte).",
+                "Faire chauffer {g1} avec la coco râpée, la vanille et le zeste de citron vert.",
                 "Ajouter la gélatine en remuant, puis verser dans des petits pots.",
                 "Laisser prendre au moins 3 heures au réfrigérateur."]},
     {"titre": "Salade de fruits exotiques", "service": "dessert",
@@ -219,7 +219,7 @@ LIVRE = [
      "requis": [["chocolat"], ["@fruit"]],
      "en_plus": ["3 cuillères à soupe de lait", "des pics en bois"],
      "etapes": ["Couper {g1} en morceaux et les piquer sur des pics en bois.",
-                "Faire fondre le chocolat avec le lait au bain-marie (avec un adulte).",
+                "Faire fondre le chocolat avec le lait au bain-marie.",
                 "Tremper les brochettes de fruits dans le chocolat fondu."]},
     {"titre": "Yaourt croquant aux fruits", "service": "dessert",
      "requis": [["yaourt"], ["@fruit"]],
@@ -240,7 +240,7 @@ LIVRE = [
      "etapes": ["Couper le poulet en morceaux et le mariner 15 minutes avec le citron vert, l'ail et la poudre à colombo.",
                 "Faire dorer le poulet avec l'oignon dans une cocotte avec un filet d'huile.",
                 "Couper {g1} en morceaux, les ajouter dans la cocotte et couvrir d'eau.",
-                "Laisser mijoter 30 minutes à feu doux (avec un adulte).",
+                "Laisser mijoter 30 minutes à feu doux.",
                 "Servir bien chaud."]},
     {"titre": "Blaff de poisson", "service": "plat",
      "requis": [["poisson"], ["citron_vert", "citron"]],
@@ -259,7 +259,7 @@ LIVRE = [
     {"titre": "Fricassée de chatrou", "service": "plat",
      "requis": [["chatrou"]],
      "en_plus": ["1 oignon", "2 gousses d'ail", "1 branche de thym", "le jus d'un citron vert", "1 filet d'huile"],
-     "etapes": ["Faire cuire le chatrou 30 minutes à l'eau bouillante (avec un adulte), puis le couper en morceaux.",
+     "etapes": ["Faire cuire le chatrou 30 minutes à l'eau bouillante, puis le couper en morceaux.",
                 "Faire revenir l'oignon et l'ail dans un filet d'huile.",
                 "Ajouter le chatrou, le thym et un verre d'eau, laisser mijoter 15 minutes.",
                 "Arroser de citron vert au moment de servir."]},
@@ -280,7 +280,7 @@ LIVRE = [
     {"titre": "Gratin de christophine", "service": "plat",
      "requis": [["christophine"], ["fromage", "creme", "beurre", "lait"]],
      "en_plus": ["1 gousse d'ail", "1 pincée de muscade", "un peu de chapelure"],
-     "etapes": ["Préchauffer le four à 200 °C (avec un adulte).",
+     "etapes": ["Préchauffer le four à 200 °C.",
                 "Cuire la christophine en dés 15 minutes à l'eau, puis l'écraser avec l'ail et la muscade.",
                 "Mélanger avec {g1} et verser dans un plat à gratin.",
                 "Parsemer de chapelure et enfourner 20 minutes, jusqu'à ce que le dessus soit doré."]},
@@ -289,7 +289,7 @@ LIVRE = [
      "en_plus": ["1 oignon", "1 pomme de terre", "1 cube de bouillon", "1 pincée de muscade"],
      "etapes": ["Éplucher et couper le giraumon et la pomme de terre en morceaux.",
                 "Les cuire 20 minutes dans de l'eau avec l'oignon et le bouillon.",
-                "Mixer jusqu'à obtenir une soupe bien lisse (avec un adulte).",
+                "Mixer jusqu'à obtenir une soupe bien lisse.",
                 "Ajouter une pincée de muscade et servir chaud."]},
     {"titre": "Pâtes à la bolognaise", "service": "plat",
      "requis": [["pates"], ["boeuf", "steak_hache", "boulettes"], ["tomate"]],

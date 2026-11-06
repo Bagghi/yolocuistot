@@ -63,21 +63,33 @@ function texteBonus(resultat) {
   return "";
 }
 
+// Allergie et interdit de la fiche, en toutes lettres.
+function contraintesProfil(profil) {
+  const allergie = profil.allergie ? `Allergie : ${profil.allergie}` : "Sans allergie";
+  return `${allergie} · Interdit : ${profil.interdit}`;
+}
+
+// La carte complète est l'image de la fiche ; la version compacte (page caméra) reprend ses valeurs en texte.
 function carteProfil(profil, { cliquable = false, selectionnee = false, compacte = false } = {}) {
-  const classes = ["carte-profil", cliquable && "cliquable", selectionnee && "selectionnee", compacte && "carte-compacte"]
+  const classes = ["carte-profil", compacte ? "carte-compacte" : "carte-image", cliquable && "cliquable", selectionnee && "selectionnee"]
     .filter(Boolean).join(" ");
   const attributs = cliquable
     ? `tabindex="0" role="button" aria-pressed="${selectionnee}"`
     : "";
-  const objectifs = CATEGORIES.map(([cle, libelle]) =>
-    `<li><span>${libelle}</span><strong>${nombre(profil.objectifs[cle])} g</strong></li>`
-  ).join("");
+  const valeurs = CATEGORIES.map(([cle, libelle]) => [libelle, `${nombre(profil.objectifs[cle])} g`]);
+  if (compacte) {
+    return `
+    <article class="${classes}" data-id="${esc(profil.id)}" ${attributs}>
+      <h3>${esc(profil.nom)}</h3>
+      <ul class="carte-objectifs">${valeurs.map(([l, v]) => `<li><span>${l}</span><strong>${v}</strong></li>`).join("")}</ul>
+      <p class="carte-contraintes">${esc(contraintesProfil(profil))}</p>
+    </article>`;
+  }
+  const description = `Fiche ${profil.nom} (${profil.personnage}). ${profil.contexte} Objectifs de la journée : `
+    + `${valeurs.map(([l, v]) => `${l} ${v}`).join(", ")}. ${contraintesProfil(profil)}.`;
   return `
     <article class="${classes}" data-id="${esc(profil.id)}" ${attributs}>
-      <div class="carte-icone" aria-hidden="true">${esc(profil.icone)}</div>
-      <h3>${esc(profil.nom)}</h3>
-      <p class="carte-desc">${esc(profil.description)}</p>
-      <ul class="carte-objectifs">${objectifs}</ul>
+      <img src="${esc(profil.image)}" alt="${esc(description)}">
     </article>`;
 }
 
@@ -103,3 +115,38 @@ function htmlRecette(recette) {
         </div>`).join("")}
     </div>`;
 }
+
+// --- Agrandissement des fiches au survol ------------------------------------
+// La carte grandit assez pour qu'on lise son texte, sans sortir de l'écran (ni du volet des scores).
+
+const LARGEUR_SURVOL = 440;
+const MARGE_SURVOL = 8;
+
+// Point fixe de l'agrandissement : le milieu de la carte, décalé si elle sortirait de la zone.
+function ancrageSurvol(debut, taille, min, max, echelle) {
+  const surplus = echelle - 1;
+  if (surplus <= 0) return taille / 2;
+  let ancrage = Math.min(taille / 2, (debut - min) / surplus);
+  ancrage = Math.max(ancrage, taille - (max - debut - taille) / surplus);
+  return Math.min(Math.max(ancrage, 0), taille);
+}
+
+document.addEventListener("pointerover", (e) => {
+  const carte = e.target.closest?.(".carte-image");
+  if (!carte || carte.contains(e.relatedTarget)) return;
+  const volet = carte.closest(".volet-contenu")?.getBoundingClientRect();
+  const zone = {
+    left: (volet?.left ?? 0) + MARGE_SURVOL,
+    right: (volet?.right ?? innerWidth) - MARGE_SURVOL,
+    top: MARGE_SURVOL,
+    bottom: innerHeight - MARGE_SURVOL,
+  };
+  const largeur = carte.offsetWidth;
+  const hauteur = carte.offsetHeight;
+  const echelle = Math.max(1, Math.min(LARGEUR_SURVOL / largeur, (zone.right - zone.left) / largeur, (zone.bottom - zone.top) / hauteur));
+  const rect = carte.getBoundingClientRect();
+  const x = ancrageSurvol(rect.left, largeur, zone.left, zone.right, echelle);
+  const y = ancrageSurvol(rect.top, hauteur, zone.top, zone.bottom, echelle);
+  carte.style.setProperty("--echelle-survol", echelle);
+  carte.style.transformOrigin = `${x}px ${y}px`;
+});

@@ -1,0 +1,205 @@
+{
+  "evenement": "Journée de la science 2026 · atelier Chef de cantine",
+  "unite": "grammes par jour",
+  "nombre_de_profils": 12,
+  "profils": [
+    {
+      "id": "prof_de_sport",
+      "image": "/logos/fiches_profils_png_haute_definition/01_prof_de_sport.png",
+      "nom": "Prof de sport",
+      "public": "adulte",
+      "personnage": "Marc",
+      "contexte": "Ce matin, Marc a fait courir ses 4e. Cet après-midi, il enchaîne trois heures de handball. Il lui faut du carburant pour tenir et de quoi récupérer.",
+      "objectifs_journaliers_g": {
+        "glucides": 420,
+        "fibres": 20,
+        "proteines": 140,
+        "lipides": 55
+      },
+      "allergie": "fraises",
+      "interdit": "fromage"
+    },
+    {
+      "id": "cpe",
+      "image": "/logos/fiches_profils_png_haute_definition/02_cpe.png",
+      "nom": "CPE",
+      "public": "adulte",
+      "personnage": "Sonia",
+      "contexte": "Arrivée à 7h, conseil de classe ce soir jusqu'à 19h. Sonia est déjà fatiguée et ne peut pas se permettre le coup de barre après le repas.",
+      "objectifs_journaliers_g": {
+        "glucides": 200,
+        "fibres": 42,
+        "proteines": 140,
+        "lipides": 55
+      },
+      "allergie": "crevettes",
+      "interdit": "pain"
+    },
+    {
+      "id": "prof_de_musique",
+      "image": "/logos/fiches_profils_png_haute_definition/03_prof_de_musique.png",
+      "nom": "Prof de musique",
+      "public": "adulte",
+      "personnage": "Lina",
+      "contexte": "Cet après-midi, Lina fait répéter la chorale pour le spectacle. Deux heures à chanter face aux élèves : pas question d'avoir mauvaise haleine !",
+      "objectifs_journaliers_g": {
+        "glucides": 420,
+        "fibres": 42,
+        "proteines": 50,
+        "lipides": 110
+      },
+      "allergie": "tomate",
+      "interdit": "oignon"
+    },
+    {
+      "id": "assistant_d_education",
+      "image": "/logos/fiches_profils_png_haute_definition/04_assistant_d_education.png",
+      "nom": "Assistant d'éducation",
+      "public": "adulte",
+      "personnage": "Kévin",
+      "contexte": "Kévin surveille la cantine, mange au dernier service puis file surveiller la cour. Il a 15 minutes : il lui faut un repas complet et rapide.",
+      "objectifs_journaliers_g": {
+        "glucides": 300,
+        "fibres": 30,
+        "proteines": 85,
+        "lipides": 80
+      },
+      "allergie": "ananas",
+      "interdit": "pastèque"
+    },
+    {
+      "id": "agent_d_entretien",
+      "image": "/logos/fiches_profils_png_haute_definition/05_agent_d_entretien.png",
+      "nom": "Agent d'entretien",
+      "public": "adulte",
+      "personnage": "Fred",
+      "contexte": "Fred commence à 5h30 : il nettoie les salles avant l'arrivée des élèves et passe sa journée debout. Il a besoin de tenir sans fringale.",
+      "objectifs_journaliers_g": {
+        "glucides": 420,
+        "fibres": 42,
+        "proteines": 85,
+        "lipides": 80
+      },
+      "allergie": "banane",
+      "interdit": "concombre"
+    },
+    {
+      "id": "principale",
+      "image": "/logos/fiches_profils_png_haute_definition/06_principale.png",
+      "nom": "Principale",
+      "public": "adulte",
+      "personnage": "Mme Bellance",
+      "contexte": "Mme Bellance enchaîne réunions, appels des parents et rendez-vous au rectorat. Elle reste assise presque toute la journée et mange souvent sur le pouce.",
+      "objectifs_journaliers_g": {
+        "glucides": 200,
+        "fibres": 30,
+        "proteines": 85,
+        "lipides": 55
+      },
+      "allergie": "mangue",
+      "interdit": "ail"
+    },
+    {
+      "id": "la_coureuse_de_fond",
+      "image": "/logos/fiches_profils_png_haute_definition/07_coureuse_de_fond.png",
+      "nom": "La coureuse de fond",
+      "public": "eleve",
+      "personnage": "Inès",
+      "contexte": "Inès, 16 ans, prépare le cross régional. Elle s'entraîne tous les soirs : sur la journée, elle doit remplir ses réserves d'énergie pour tenir les séances.",
+      "priorite": "les glucides",
+      "objectifs_journaliers_g": {
+        "glucides": 420,
+        "fibres": 20,
+        "proteines": 50,
+        "lipides": 80
+      },
+      "allergie": "lait",
+      "interdit": "poivron"
+    },
+    {
+      "id": "le_pilier_de_rugby",
+      "image": "/logos/fiches_profils_png_haute_definition/08_pilier_de_rugby.png",
+      "nom": "Le pilier de rugby",
+      "public": "eleve",
+      "personnage": "Kylian",
+      "contexte": "Kylian, 17 ans, joue pilier dans un club de rugby. Mêlées, plaquages, musculation : son corps réclame de quoi construire du muscle.",
+      "priorite": "les protéines",
+      "objectifs_journaliers_g": {
+        "glucides": 200,
+        "fibres": 20,
+        "proteines": 140,
+        "lipides": 110
+      },
+      "allergie": "arachide",
+      "interdit": "pomme de terre"
+    },
+    {
+      "id": "la_vegetarienne",
+      "image": "/logos/fiches_profils_png_haute_definition/09_vegetarienne.png",
+      "nom": "La végétarienne",
+      "public": "eleve",
+      "personnage": "Maëlle",
+      "contexte": "Maëlle, 14 ans, ne mange ni viande ni poisson. Pour ses protéines, elle compte sur les pois rouges, les lentilles et les pois d'Angole.",
+      "priorite": "les fibres",
+      "objectifs_journaliers_g": {
+        "glucides": 300,
+        "fibres": 42,
+        "proteines": 50,
+        "lipides": 55
+      },
+      "allergie": "kiwi",
+      "interdit": "poulet"
+    },
+    {
+      "id": "le_candidat_au_bac",
+      "image": "/logos/fiches_profils_png_haute_definition/10_candidat_au_bac.png",
+      "nom": "Le candidat au bac",
+      "public": "eleve",
+      "personnage": "Noah",
+      "contexte": "Noah, 18 ans, passe le bac dans un mois. Il révise du matin au soir : il a besoin d'une énergie régulière, sans coup de barre.",
+      "priorite": "les fibres",
+      "objectifs_journaliers_g": {
+        "glucides": 200,
+        "fibres": 42,
+        "proteines": 85,
+        "lipides": 110
+      },
+      "allergie": "poisson",
+      "interdit": "maïs"
+    },
+    {
+      "id": "le_leve_tot",
+      "image": "/logos/fiches_profils_png_haute_definition/11_leve_tot.png",
+      "nom": "Le lève-tôt",
+      "public": "eleve",
+      "personnage": "Jordan",
+      "contexte": "Jordan, 15 ans, prend le bus à 5 h du matin sans avoir le temps de déjeuner. Sa journée est très longue : ses repas doivent être copieux.",
+      "priorite": "de tout, en quantité",
+      "objectifs_journaliers_g": {
+        "glucides": 420,
+        "fibres": 30,
+        "proteines": 140,
+        "lipides": 110
+      },
+      "allergie": null,
+      "interdit": "salade"
+    },
+    {
+      "id": "la_petite_nouvelle_de_6e",
+      "image": "/logos/fiches_profils_png_haute_definition/12_petite_nouvelle_6e.png",
+      "nom": "La petite nouvelle de 6e",
+      "public": "eleve",
+      "personnage": "Chloé",
+      "contexte": "Chloé, 11 ans, vient d'entrer au collège. Elle a un petit appétit et laisse souvent la moitié de son plateau : mieux vaut peu mais bien choisi.",
+      "priorite": "de petites portions",
+      "objectifs_journaliers_g": {
+        "glucides": 200,
+        "fibres": 20,
+        "proteines": 50,
+        "lipides": 55
+      },
+      "allergie": "œuf",
+      "interdit": "brocoli"
+    }
+  ]
+}

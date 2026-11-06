@@ -22,11 +22,10 @@ function afficherAssiette() {
     liste.innerHTML = classes.map((classe) => {
       const aliment = aliments[classe];
       const quantite = assiette[classe];
-      const depasse = quantite > aliment.portion_max;
       return `
-        <li data-classe="${esc(classe)}" class="${depasse ? "depasse" : ""}">
+        <li data-classe="${esc(classe)}">
           <span class="nom">${esc(aliment.nom)}
-            <small>${esc(aliment.unite_portion)}${depasse ? ` · portion max : ${aliment.portion_max}` : ""}</small>
+            <small>${esc(aliment.unite_portion)}</small>
           </span>
           <button type="button" class="bouton bouton-petit" data-action="moins" aria-label="Retirer un ${esc(aliment.nom)}">−</button>
           <span class="quantite">${quantite}</span>
