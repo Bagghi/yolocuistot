@@ -63,21 +63,33 @@ function texteBonus(resultat) {
   return "";
 }
 
+// Allergie et interdit de la fiche, en toutes lettres.
+function contraintesProfil(profil) {
+  const allergie = profil.allergie ? `Allergie : ${profil.allergie}` : "Sans allergie";
+  return `${allergie} · Interdit : ${profil.interdit}`;
+}
+
+// La carte complète est l'image de la fiche ; la version compacte (page caméra) reprend ses valeurs en texte.
 function carteProfil(profil, { cliquable = false, selectionnee = false, compacte = false } = {}) {
-  const classes = ["carte-profil", cliquable && "cliquable", selectionnee && "selectionnee", compacte && "carte-compacte"]
+  const classes = ["carte-profil", compacte ? "carte-compacte" : "carte-image", cliquable && "cliquable", selectionnee && "selectionnee"]
     .filter(Boolean).join(" ");
   const attributs = cliquable
     ? `tabindex="0" role="button" aria-pressed="${selectionnee}"`
     : "";
-  const objectifs = CATEGORIES.map(([cle, libelle]) =>
-    `<li><span>${libelle}</span><strong>${nombre(profil.objectifs[cle])} g</strong></li>`
-  ).join("");
+  const valeurs = CATEGORIES.map(([cle, libelle]) => [libelle, `${nombre(profil.objectifs[cle])} g`]);
+  if (compacte) {
+    return `
+    <article class="${classes}" data-id="${esc(profil.id)}" ${attributs}>
+      <h3>${esc(profil.nom)}</h3>
+      <ul class="carte-objectifs">${valeurs.map(([l, v]) => `<li><span>${l}</span><strong>${v}</strong></li>`).join("")}</ul>
+      <p class="carte-contraintes">${esc(contraintesProfil(profil))}</p>
+    </article>`;
+  }
+  const description = `Fiche ${profil.nom} (${profil.personnage}). ${profil.contexte} Objectifs de la journée : `
+    + `${valeurs.map(([l, v]) => `${l} ${v}`).join(", ")}. ${contraintesProfil(profil)}.`;
   return `
     <article class="${classes}" data-id="${esc(profil.id)}" ${attributs}>
-      <div class="carte-icone" aria-hidden="true">${esc(profil.icone)}</div>
-      <h3>${esc(profil.nom)}</h3>
-      <p class="carte-desc">${esc(profil.description)}</p>
-      <ul class="carte-objectifs">${objectifs}</ul>
+      <img src="${esc(profil.image)}" alt="${esc(description)}">
     </article>`;
 }
 

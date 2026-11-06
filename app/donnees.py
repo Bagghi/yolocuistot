@@ -22,7 +22,8 @@ def aliments_par_classe():
 
 
 def profils():
-    return _lire("profils.json")
+    fiches = _lire("profils_yolo_cuistot.json")["profils"]
+    return [{**p, "objectifs": p["objectifs_journaliers_g"]} for p in fiches]
 
 
 def profil(profil_id):

@@ -20,7 +20,8 @@ SORTIE = RACINE / "fiches_yolocuistot.html"
 
 def _logo(nom):
     contenu = base64.b64encode((DOSSIER_LOGOS / nom).read_bytes()).decode()
-    return f"data:image/png;base64,{contenu}"
+    type_image = "jpeg" if nom.endswith(".jpg") else "png"
+    return f"data:image/{type_image};base64,{contenu}"
 
 
 def _json(valeur):
@@ -33,11 +34,12 @@ def main():
     css = (DOSSIER_STATIC / "css" / "style.css").read_text(encoding="utf-8")
     commun = (DOSSIER_STATIC / "js" / "commun.js").read_text(encoding="utf-8")
 
+    profils = [{**p, "image": _logo(p["image"].removeprefix("/logos/"))} for p in donnees.profils()]
     remplacements = [
         ('<link rel="stylesheet" href="/static/css/style.css">', f"<style>\n{css}\n</style>"),
         ('<script src="/static/js/commun.js"></script>', f"<script>\n{commun}\n</script>"),
         ('const [profils, aliments] = await Promise.all([api("/api/profils"), api("/api/aliments")]);',
-         f"const profils = {_json(donnees.profils())};\n      const aliments = {_json(donnees.aliments())};"),
+         f"const profils = {_json(profils)};\n      const aliments = {_json(donnees.aliments())};"),
     ]
     for ancien, nouveau in remplacements:
         if ancien not in page:
@@ -46,7 +48,7 @@ def main():
 
     # Le lien vers l'accueil n'a pas de sens hors du serveur.
     page = re.sub(r'\s*<nav class="liens">.*?</nav>', "", page, flags=re.S)
-    page = re.sub(r'src="/logos/([^"]+)"', lambda m: f'src="{_logo(m.group(1))}"', page)
+    page = re.sub(r'(src|href)="/logos/([^"]+)"', lambda m: f'{m.group(1)}="{_logo(m.group(2))}"', page)
 
     SORTIE.write_text(page, encoding="utf-8")
     print(f"Page exportée : {SORTIE} ({SORTIE.stat().st_size // 1024} Ko)")

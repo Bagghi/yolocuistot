@@ -41,12 +41,15 @@ h2 { font-size: 1.35rem; color: var(--marine); }
 }
 .bandeau .logo { height: 72px; width: auto; }
 .bandeau .titre { text-align: center; flex: 1; }
+.titre-logo { display: flex; align-items: center; justify-content: center; gap: 14px; }
+.bandeau .logo-yolo { height: 110px; width: auto; }
 .bandeau h1 { font-size: 2.4rem; color: var(--marine); margin: 0; letter-spacing: .02em; }
 .bandeau h1 span { color: var(--orange); }
 .bandeau p { margin: 0; color: var(--texte-doux); font-size: 1.1rem; }
 .bandeau-compact { padding: 8px 20px; }
 .bandeau-compact .logo { height: 48px; }
 .bandeau-compact h1 { font-size: 1.7rem; }
+.bandeau-compact .logo-yolo { height: 64px; }
 .info-equipe {
   display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center;
   margin-top: 4px; font-size: 1rem; color: var(--texte-doux);
@@ -120,17 +123,20 @@ input[type="text"]:focus, select:focus { outline: none; border-color: var(--bleu
   background: var(--orange); color: #fff; width: 28px; height: 28px; border-radius: 50%;
   display: grid; place-items: center; font-weight: 700;
 }
-.carte-icone { font-size: 2.2rem; line-height: 1; text-align: center; }
+.carte-image { padding: 0; overflow: hidden; }
+.carte-image img { display: block; width: 100%; height: auto; }
+.carte-image.selectionnee::after { top: auto; bottom: 10px; width: 40px; height: 40px; font-size: 1.3rem; }
+.titre-carrousel { margin: 14px 0 0; font-size: 1.05rem; color: var(--marine); }
 
 /* Carrousel des fiches sur l'accueil */
 .carrousel { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
 .carrousel-piste {
   flex: 1; min-width: 0; display: flex; gap: 14px;
-  overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+  overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-left: 4px; scroll-behavior: smooth;
   padding: 8px 4px 12px; scrollbar-width: none;
 }
 .carrousel-piste::-webkit-scrollbar { display: none; }
-.carrousel-piste .carte-profil { flex: 0 0 250px; scroll-snap-align: start; }
+.carrousel-piste .carte-profil { flex: 0 0 300px; scroll-snap-align: start; }
 .carrousel-fleche {
   flex: 0 0 auto; width: 48px; height: 48px; border-radius: 50%;
   border: 2px solid var(--marine); background: var(--surface); color: var(--marine);
@@ -139,7 +145,6 @@ input[type="text"]:focus, select:focus { outline: none; border-color: var(--bleu
 .carrousel-fleche:hover:not(:disabled) { background: var(--surface-2); }
 .carrousel-fleche:disabled { opacity: .25; cursor: default; }
 .carte-profil h3 { font-size: 1.02rem; color: var(--marine); margin: 0; }
-.carte-desc { margin: 0; font-size: .88rem; color: var(--texte-doux); }
 .carte-objectifs { list-style: none; margin: auto 0 0; padding: 6px 0 0; display: grid; gap: 3px; font-size: .9rem; }
 .carte-objectifs li { display: flex; justify-content: space-between; gap: 8px; white-space: nowrap; border-bottom: 1px dashed var(--bordure); }
 .carte-objectifs strong { color: var(--marine); }
@@ -155,7 +160,6 @@ td.nombre, th.nombre { text-align: right; font-variant-numeric: tabular-nums; }
 .scores tbody tr:focus-visible { outline: 3px solid var(--bleu); outline-offset: -3px; }
 .rang { font-weight: 700; font-size: 1.15rem; width: 44px; }
 .score-cellule { font-weight: 800; font-size: 1.15rem; color: var(--marine); white-space: nowrap; }
-.icone-fiche { font-size: 1.3rem; margin-right: 6px; }
 .tableau-defilant { max-height: calc(100vh - 230px); overflow-y: auto; }
 
 /* --- Volet latéral ------------------------------------------------------ */
@@ -213,6 +217,7 @@ td.nombre, th.nombre { text-align: right; font-variant-numeric: tabular-nums; }
   padding: 10px 24px; min-width: 460px; justify-content: space-between;
 }
 .logo-mini { height: 46px; width: auto; }
+.logo-mini-yolo { height: 58px; background: #fff; border-radius: 10px; padding: 2px; }
 .calque-haut > div { text-align: center; flex: 1; }
 .titre-mini { font-size: 1.5rem; font-weight: 800; color: var(--marine); line-height: 1.1; }
 .titre-mini span { color: var(--orange); }
@@ -243,9 +248,8 @@ td.nombre, th.nombre { text-align: right; font-variant-numeric: tabular-nums; }
 
 /* Carte profil compacte (mission sur la page caméra) */
 .carte-compacte { padding: 8px 10px; gap: 2px; border-width: 2px; background: rgba(255, 255, 255, .85); border-color: var(--bleu-fds); }
-.carte-compacte .carte-icone { font-size: 1.4rem; }
 .carte-compacte h3 { font-size: .9rem; }
-.carte-compacte .carte-desc { display: none; }
+.carte-contraintes { margin: 4px 0 0; font-size: .8rem; font-weight: 600; color: var(--rouge); }
 .carte-compacte .carte-objectifs { grid-template-columns: 1fr 1fr; gap: 2px 12px; font-size: .8rem; padding-top: 4px; }
 
 @media (max-width: 800px) {
@@ -295,7 +299,7 @@ td.nombre, th.nombre { text-align: right; font-variant-numeric: tabular-nums; }
 .source-recette { font-size: .8rem; color: var(--texte-doux); }
 
 /* --- Page des fiches ---------------------------------------------------- */
-.fiches .grille-profils { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.fiches .grille-profils { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
 .section-fiches + .section-fiches { margin-top: 24px; }
 .tableau-aliments td, .tableau-aliments th { font-size: .92rem; padding: 7px 8px; }
 .tableau-aliments td:first-child { text-transform: capitalize; font-weight: 600; }

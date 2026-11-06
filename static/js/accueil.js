@@ -5,14 +5,17 @@ let scores = [];
 let profilChoisi = null;
 
 const champEquipe = document.getElementById("equipe");
-const grille = document.getElementById("grille-profils");
+const carrousels = [...document.querySelectorAll(".carrousel")];
 const boutonGo = document.getElementById("bouton-go");
 const volet = document.getElementById("volet");
 
 function afficherProfils() {
-  grille.innerHTML = profils
-    .map((p) => carteProfil(p, { cliquable: true, selectionnee: p.id === profilChoisi }))
-    .join("");
+  for (const carrousel of carrousels) {
+    carrousel.querySelector(".carrousel-piste").innerHTML = profils
+      .filter((p) => p.public === carrousel.dataset.public)
+      .map((p) => carteProfil(p, { cliquable: true, selectionnee: p.id === profilChoisi }))
+      .join("");
+  }
 }
 
 function mettreAJourBouton() {
@@ -22,8 +25,8 @@ function mettreAJourBouton() {
 function choisirProfil(carte) {
   if (!carte) return;
   profilChoisi = carte.dataset.id;
-  // On change seulement les classes (sans redessiner) pour garder la position du carrousel.
-  grille.querySelectorAll(".carte-profil").forEach((c) => {
+  // On change seulement les classes (sans redessiner) pour garder la position des carrousels.
+  document.querySelectorAll(".carrousel .carte-profil").forEach((c) => {
     const choisie = c.dataset.id === profilChoisi;
     c.classList.toggle("selectionnee", choisie);
     c.setAttribute("aria-pressed", choisie);
@@ -31,28 +34,31 @@ function choisirProfil(carte) {
   mettreAJourBouton();
 }
 
-// --- Carrousel des fiches ------------------------------------------------------
-
-const flechePrecedente = document.getElementById("fleche-precedente");
-const flecheSuivante = document.getElementById("fleche-suivante");
+// --- Carrousels des fiches (élèves, professionnels) ------------------------------
 
 function mettreAJourFleches() {
-  flechePrecedente.disabled = grille.scrollLeft <= 2;
-  flecheSuivante.disabled = grille.scrollLeft + grille.clientWidth >= grille.scrollWidth - 2;
+  for (const carrousel of carrousels) {
+    const piste = carrousel.querySelector(".carrousel-piste");
+    carrousel.querySelector(".fleche-precedente").disabled = piste.scrollLeft <= 2;
+    carrousel.querySelector(".fleche-suivante").disabled = piste.scrollLeft + piste.clientWidth >= piste.scrollWidth - 2;
+  }
 }
 
-flechePrecedente.addEventListener("click", () => grille.scrollBy({ left: -grille.clientWidth * 0.8, behavior: "smooth" }));
-flecheSuivante.addEventListener("click", () => grille.scrollBy({ left: grille.clientWidth * 0.8, behavior: "smooth" }));
-grille.addEventListener("scroll", mettreAJourFleches, { passive: true });
+for (const carrousel of carrousels) {
+  const piste = carrousel.querySelector(".carrousel-piste");
+  carrousel.querySelector(".fleche-precedente").addEventListener("click", () => piste.scrollBy({ left: -piste.clientWidth * 0.8, behavior: "smooth" }));
+  carrousel.querySelector(".fleche-suivante").addEventListener("click", () => piste.scrollBy({ left: piste.clientWidth * 0.8, behavior: "smooth" }));
+  piste.addEventListener("scroll", mettreAJourFleches, { passive: true });
+  piste.addEventListener("click", (e) => choisirProfil(e.target.closest(".carte-profil")));
+  piste.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      choisirProfil(e.target.closest(".carte-profil"));
+    }
+  });
+}
 window.addEventListener("resize", mettreAJourFleches);
 
-grille.addEventListener("click", (e) => choisirProfil(e.target.closest(".carte-profil")));
-grille.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" || e.key === " ") {
-    e.preventDefault();
-    choisirProfil(e.target.closest(".carte-profil"));
-  }
-});
 champEquipe.addEventListener("input", mettreAJourBouton);
 
 document.getElementById("formulaire").addEventListener("submit", (e) => {
@@ -74,13 +80,12 @@ async function chargerScores() {
   const corps = document.getElementById("corps-scores");
   document.getElementById("scores-vide").hidden = scores.length > 0;
   corps.innerHTML = scores.map((s, i) => {
-    const profil = profils.find((p) => p.id === s.profil_id);
     const medaille = ["🥇", "🥈", "🥉"][i] || i + 1;
     return `
       <tr tabindex="0" data-index="${i}">
         <td class="rang">${medaille}</td>
         <td><strong>${esc(s.equipe)}</strong></td>
-        <td><span class="icone-fiche" aria-hidden="true">${esc(profil?.icone)}</span>${esc(s.profil_nom)}</td>
+        <td>${esc(s.profil_nom)}</td>
         <td>${esc(s.recette?.titre)}</td>
         <td class="nombre score-cellule">${nombre(s.score, 1)}${texteBonus(s) ? " ⭐" : ""}</td>
       </tr>`;
@@ -122,7 +127,7 @@ async function demarrer() {
   try {
     profils = await api("/api/profils");
   } catch (erreur) {
-    grille.innerHTML = `<p class="erreur">Impossible de charger les fiches : ${esc(erreur.message)}</p>`;
+    carrousels[0].querySelector(".carrousel-piste").innerHTML = `<p class="erreur">Impossible de charger les fiches : ${esc(erreur.message)}</p>`;
     return;
   }
   afficherProfils();

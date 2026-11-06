@@ -3,14 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>YOLO cuisto : les fiches</title>
+  <title>YOLO cuistot : les fiches</title>
+  <link rel="icon" type="image/png" href="/logos/favicon.png">
   <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
   <header class="bandeau bandeau-compact">
     <img class="logo" src="/logos/logo-fds-bleu-transparent.png" alt="Fête de la Science">
     <div class="titre">
-      <h1>YOLO <span>cuisto</span></h1>
+      <div class="titre-logo">
+        <img class="logo-yolo" src="/logos/logo_yolo_cuistot_site.png" alt="Logo YOLO Cuistot">
+        <h1>YOLO <span>cuistot</span></h1>
+      </div>
       <p>Les fiches du stand</p>
     </div>
     <img class="logo" src="/logos/logo_couleur_ua.png" alt="Université des Antilles">
@@ -20,9 +24,15 @@
 
   <main class="fiches">
     <section class="panneau section-fiches">
-      <h2>🎯 Les fiches profils</h2>
-      <p class="aide">Objectifs nutritionnels pour un déjeuner.</p>
-      <div id="grille-profils" class="grille-profils" style="margin-top:14px"></div>
+      <h2>🎒 Les fiches élèves</h2>
+      <p class="aide">Objectifs nutritionnels pour la journée.</p>
+      <div id="grille-eleves" class="grille-profils" style="margin-top:14px"></div>
+    </section>
+
+    <section class="panneau section-fiches">
+      <h2>🧑‍🏫 Les fiches professionnels</h2>
+      <p class="aide">Objectifs nutritionnels pour la journée.</p>
+      <div id="grille-professionnels" class="grille-profils" style="margin-top:14px"></div>
     </section>
 
     <section class="panneau section-fiches">
@@ -46,7 +56,9 @@
   <script>
     (async () => {
       const [profils, aliments] = await Promise.all([api("/api/profils"), api("/api/aliments")]);
-      document.getElementById("grille-profils").innerHTML = profils.map((p) => carteProfil(p)).join("");
+      const cartes = (visiteurs) => profils.filter((p) => p.public === visiteurs).map((p) => carteProfil(p)).join("");
+      document.getElementById("grille-eleves").innerHTML = cartes("eleve");
+      document.getElementById("grille-professionnels").innerHTML = cartes("adulte");
       document.getElementById("corps-aliments").innerHTML = [...aliments]
         .sort((a, b) => a.nom.localeCompare(b.nom, "fr"))
         .map((a) => `

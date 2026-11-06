@@ -31,8 +31,8 @@
 **YOLO cuisto** est un atelier conçu par cinq doctorants de l'**Université des Antilles** pour la **Fête de la Science 2026**.
 Il s'adresse à des groupes de collégiens et de lycéens qui passent environ 15 minutes sur le stand.
 
-Les élèves deviennent l'équipe cuisine de leur collège. Le groupe tire la fiche d'un élève type
-(un collégien qui joue au foot, une élève végétarienne, un lycéen qui révise le bac…) et doit composer,
+Les élèves deviennent l'équipe cuisine de leur collège. Le groupe tire une fiche profil, élève ou professionnel du collège
+(la coureuse de fond, la végétarienne, le candidat au bac, le prof de sport…) et doit composer,
 avec des aliments factices de type dînette, **l'assiette de cantine la plus adaptée à ses besoins**.
 
 L'assiette passe ensuite devant une caméra : un modèle d'intelligence artificielle, **YOLO**,
@@ -74,7 +74,7 @@ L'application est un site web qui tourne sur l'ordinateur du stand. Elle comport
 
 | Page | Adresse | Rôle |
 | --- | --- | --- |
-| **Accueil** | `/` | Nom de l'équipe, choix de la fiche tirée (carrousel de cartes), tableau des scores de la journée |
+| **Accueil** | `/` | Nom de l'équipe, choix de la fiche tirée (un carrousel pour les élèves, un pour les professionnels), tableau des scores de la journée |
 | **Détection** | `/detection` | Caméra en plein écran avec les aliments encadrés par YOLO. Chaque aliment détecté s'ajoute à la liste, que les élèves ajustent avec −, + et ✕ |
 | **Résultat** | `/resultat` | Score, comparaison de l'assiette avec les objectifs de la fiche, respect des portions, recette inventée |
 | **Fiches** | `/profils` | Les fiches profils et les fiches aliments, en consultation |
@@ -161,7 +161,7 @@ Tous les réglages sont regroupés dans [`app/config.py`](app/config.py) :
 
 Les fiches sont dans le dossier [`data/`](data/) et peuvent être modifiées sans toucher au code :
 
-- [`profils.json`](data/profils.json) : les 10 fiches profils et leurs objectifs nutritionnels ;
+- [`profils_yolo_cuistot.json`](data/profils_yolo_cuistot.json) : les 12 fiches profils et leurs objectifs nutritionnels de la journée. Les images sont dans [`logos/fiches_profils_png_haute_definition/`](logos/fiches_profils_png_haute_definition/), et `python outils/generer_pdf_fiches.py` en fait des PDF A4 à imprimer ;
 - [`aliments.json`](data/aliments.json) : environ 140 aliments, avec leur nom, le texte cherché par YOLOE (`prompt_yolo`),
   leurs apports, leur portion maximale et l'indication des bases d'entraînement qui les contiennent (`connu_yolo`) ;
 - [`cahier_des_charges.json`](data/cahier_des_charges.json) : règles de la cantine.
