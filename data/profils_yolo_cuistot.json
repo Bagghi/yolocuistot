@@ -9,7 +9,8 @@
       "nom": "Prof de sport",
       "public": "adulte",
       "personnage": "Marc",
-      "contexte": "Ce matin, Marc a fait courir ses 4e. Cet après-midi, il enchaîne trois heures de handball. Il lui faut du carburant pour tenir et de quoi récupérer.",
+      "contexte": "Ce matin, Marc a fait courir ses 4e. Cet après-midi, il enchaîne trois heures de basket. Il lui faut du carburant pour tenir et de quoi récupérer.",
+      "priorite": "un repas qui recharge les batteries",
       "objectifs_journaliers_g": {
         "glucides": 420,
         "fibres": 20,
@@ -26,6 +27,7 @@
       "public": "adulte",
       "personnage": "Sonia",
       "contexte": "Arrivée à 7h, conseil de classe ce soir jusqu'à 19h. Sonia est déjà fatiguée et ne peut pas se permettre le coup de barre après le repas.",
+      "priorite": "un repas qui ne donne pas envie de dormir",
       "objectifs_journaliers_g": {
         "glucides": 200,
         "fibres": 42,
@@ -42,6 +44,7 @@
       "public": "adulte",
       "personnage": "Lina",
       "contexte": "Cet après-midi, Lina fait répéter la chorale pour le spectacle. Deux heures à chanter face aux élèves : pas question d'avoir mauvaise haleine !",
+      "priorite": "un repas qui ne fait pas fuir la chorale",
       "objectifs_journaliers_g": {
         "glucides": 420,
         "fibres": 42,
@@ -58,6 +61,7 @@
       "public": "adulte",
       "personnage": "Kévin",
       "contexte": "Kévin surveille la cantine, mange au dernier service puis file surveiller la cour. Il a 15 minutes : il lui faut un repas complet et rapide.",
+      "priorite": "un repas équilibré, vite avalé",
       "objectifs_journaliers_g": {
         "glucides": 300,
         "fibres": 30,
@@ -73,7 +77,8 @@
       "nom": "Agent d'entretien",
       "public": "adulte",
       "personnage": "Fred",
-      "contexte": "Fred commence à 5h30 : il nettoie les salles avant l'arrivée des élèves et passe sa journée debout. Il a besoin de tenir sans fringale.",
+      "contexte": "Fred commence à 5h30 : il nettoie les salles avant l'arrivée des élèves et passe une grande partie de sa journée debout. Il a besoin de tenir sans fringale.",
+      "priorite": "un repas qui tient au corps",
       "objectifs_journaliers_g": {
         "glucides": 420,
         "fibres": 42,
@@ -90,6 +95,7 @@
       "public": "adulte",
       "personnage": "Mme Bellance",
       "contexte": "Mme Bellance enchaîne réunions, appels des parents et rendez-vous au rectorat. Elle reste assise presque toute la journée et mange souvent sur le pouce.",
+      "priorite": "un repas léger",
       "objectifs_journaliers_g": {
         "glucides": 200,
         "fibres": 30,
@@ -100,13 +106,13 @@
       "interdit": "ail"
     },
     {
-      "id": "la_coureuse_de_fond",
-      "image": "/logos/fiches_profils_png_haute_definition/07_coureuse_de_fond.png",
-      "nom": "La coureuse de fond",
+      "id": "l_athlete",
+      "image": "/logos/fiches_profils_png_haute_definition/07_athlete.png",
+      "nom": "L'athlète",
       "public": "eleve",
       "personnage": "Inès",
       "contexte": "Inès, 16 ans, prépare le cross régional. Elle s'entraîne tous les soirs : sur la journée, elle doit remplir ses réserves d'énergie pour tenir les séances.",
-      "priorite": "les glucides",
+      "priorite": "un repas plein d'énergie",
       "objectifs_journaliers_g": {
         "glucides": 420,
         "fibres": 20,
@@ -123,7 +129,7 @@
       "public": "eleve",
       "personnage": "Kylian",
       "contexte": "Kylian, 17 ans, joue pilier dans un club de rugby. Mêlées, plaquages, musculation : son corps réclame de quoi construire du muscle.",
-      "priorite": "les protéines",
+      "priorite": "un repas pour être en forme le jour du match",
       "objectifs_journaliers_g": {
         "glucides": 200,
         "fibres": 20,
@@ -140,7 +146,7 @@
       "public": "eleve",
       "personnage": "Maëlle",
       "contexte": "Maëlle, 14 ans, ne mange ni viande ni poisson. Pour ses protéines, elle compte sur les pois rouges, les lentilles et les pois d'Angole.",
-      "priorite": "les fibres",
+      "priorite": "un repas complet sans viande ni poisson",
       "objectifs_journaliers_g": {
         "glucides": 300,
         "fibres": 42,
@@ -157,7 +163,7 @@
       "public": "eleve",
       "personnage": "Noah",
       "contexte": "Noah, 18 ans, passe le bac dans un mois. Il révise du matin au soir : il a besoin d'une énergie régulière, sans coup de barre.",
-      "priorite": "les fibres",
+      "priorite": "un repas qui aide à rester concentré",
       "objectifs_journaliers_g": {
         "glucides": 200,
         "fibres": 42,
