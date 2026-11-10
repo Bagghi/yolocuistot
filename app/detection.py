@@ -18,10 +18,10 @@ import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-from . import donnees
-from .config import (CAMERA_INDEX, DELAI_ARRET_CAMERA, DEMI_PRECISION, DEVICE, DOSSIER_DONNEES, LISSAGE_IMAGES,
-                     MODELE_YOLO, PROMPTS_TEXTE, RESOLUTION_CAMERA, SEUIL_CONFIANCE,
-                     TAILLE_IMAGE_YOLO)
+from . import donnees, exemples_visuels
+from .config import (CAMERA_INDEX, DELAI_ARRET_CAMERA, DEMI_PRECISION, DEVICE, DOSSIER_DONNEES, EXEMPLES_VISUELS,
+                     LISSAGE_IMAGES, MODELE_YOLO, PROMPTS_TEXTE, RESOLUTION_CAMERA, SEUIL_CONFIANCE,
+                     SEUIL_CONFIANCE_VISUEL, TAILLE_IMAGE_YOLO)
 
 journal = logging.getLogger(__name__)
 
@@ -53,6 +53,7 @@ class Detecteur:
         self._police = _police(22)
         self._etiquettes = {}
         self._noms = {}
+        self._indices_visuels = set()     # indices des prompts visuels parmi les classes du modèle
         # Échange entre le thread caméra et le thread YOLO.
         self._image_brute = None          # dernière image de la caméra, à analyser
         self._nouvelle_image = threading.Event()
@@ -165,7 +166,10 @@ class Detecteur:
                     textes = a["prompt_yolo"] if isinstance(a["prompt_yolo"], list) else [a["prompt_yolo"]]
                     prompts += textes
                     classes += [a["classe_yolo"]] * len(textes)
-                modele.set_classes(prompts, self._encoder_prompts(modele, prompts))
+                encodage = self._encoder_prompts(modele, prompts)
+                if EXEMPLES_VISUELS:
+                    encodage = self._ajouter_prompts_visuels(modele, aliments, prompts, classes, encodage)
+                modele.set_classes(prompts, encodage)
             else:
                 classes = [modele.names[i] for i in sorted(modele.names)]
             # Première prédiction « à vide » : la carte graphique est prête quand la page s'ouvre.
@@ -193,6 +197,26 @@ class Detecteur:
         for ancien in DOSSIER_DONNEES.glob("cache_prompts_*.pt"):
             ancien.unlink()
         torch.save(encodage.cpu(), fichier)
+        return encodage
+
+    def _ajouter_prompts_visuels(self, modele, aliments, prompts, classes, encodage):
+        """Ajoute aux prompts texte une empreinte visuelle par aliment photographié (voir exemples_visuels.py).
+
+        prompts et classes sont complétés sur place ; renvoie l'encodage complété.
+        """
+        import torch
+        try:
+            visuels = exemples_visuels.empreintes(modele, {a["classe_yolo"] for a in aliments})
+        except Exception:
+            journal.exception("Prompts visuels non calculés : seuls les prompts texte sont utilisés")
+            return encodage
+        for classe, vecteur in visuels.items():
+            self._indices_visuels.add(len(prompts))
+            prompts.append(f"{classe} (photos)")
+            classes.append(classe)
+            encodage = torch.cat([encodage, vecteur.to(encodage.device, encodage.dtype)[None, None]], dim=1)
+        if visuels:
+            journal.info("Prompts visuels ajoutés : %s", ", ".join(visuels))
         return encodage
 
     def _page_ouverte(self):
@@ -306,12 +330,16 @@ class Detecteur:
                 self._ajouter_comptes(Counter(classe for classe, _, _ in detections))
 
     def _detecter(self, modele, classes, image):
-        resultat = modele.predict(image, imgsz=TAILLE_IMAGE_YOLO, conf=SEUIL_CONFIANCE,
+        seuil_minimum = min(SEUIL_CONFIANCE, SEUIL_CONFIANCE_VISUEL) if self._indices_visuels else SEUIL_CONFIANCE
+        resultat = modele.predict(image, imgsz=TAILLE_IMAGE_YOLO, conf=seuil_minimum,
                                   device=DEVICE, quantize=PRECISION, verbose=False)[0]
         detections = []
         for boite in resultat.boxes:
             indice = int(boite.cls)
             if indice >= len(classes):
+                continue
+            seuil = SEUIL_CONFIANCE_VISUEL if indice in self._indices_visuels else SEUIL_CONFIANCE
+            if float(boite.conf) < seuil:
                 continue
             x1, y1, x2, y2 = (int(v) for v in boite.xyxy[0].tolist())
             detections.append((classes[indice], float(boite.conf), (x1, y1, x2, y2)))

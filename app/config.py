@@ -21,6 +21,10 @@ PROMPTS_TEXTE = True              # True : YOLOE pré-entraîné guidé par le c
 RESOLUTION_CAMERA = (1280, 720)   # demandée à la caméra (sans réglage, OpenCV prend 640x480 et peut rogner l'image)
 TAILLE_IMAGE_YOLO = 640         # côté le plus long de l'image vue par YOLO. 960 ou 1280 : petits objets mieux vus, mais plus lent
 SEUIL_CONFIANCE = 0.40
+EXEMPLES_VISUELS = True           # True : ajoute aux prompts texte les empreintes des photos d'exemple
+                                  # (data/exemples_visuels, annotées avec outils/annoter_exemples.py)
+SEUIL_CONFIANCE_VISUEL = 0.50     # confiance minimale pour les prompts visuels : leurs scores sont plus élevés
+                                  # que ceux du texte, un seuil plus haut évite les confusions entre jouets
 DEVICE = None                     # None = automatique (carte graphique si disponible), "cpu" pour forcer le processeur
 DEMI_PRECISION = True             # calcul en 16 bits sur la carte graphique : presque 2 fois plus rapide, même détection
 COEURS_CPU = list(range(12))      # cœurs du processeur réservés à l'appli. i9-13900H : 0 à 11 = cœurs rapides,

@@ -155,6 +155,7 @@ Tous les réglages sont regroupés dans [`app/config.py`](app/config.py) :
 | `RESOLUTION_CAMERA` | Résolution demandée à la caméra |
 | `TAILLE_IMAGE_YOLO` | Taille de l'image analysée : plus grande, elle aide à voir les petits objets mais ralentit la détection |
 | `SEUIL_CONFIANCE` | Confiance minimale pour qu'un aliment soit retenu |
+| `EXEMPLES_VISUELS`, `SEUIL_CONFIANCE_VISUEL` | Utilisation des photos d'exemple (voir ci-dessous) et leur confiance minimale |
 | `BONUS_BON_PROFIL` | Points ajoutés quand l'assiette correspond le mieux à la fiche tirée (50 par défaut) |
 | `FOURNISSEURS_RECETTE` | Ordre des modèles de langage essayés pour la recette |
 | `OLLAMA_MODELE`, `GEMINI_MODELE` | Modèles de langage utilisés |
@@ -168,6 +169,18 @@ Les fiches sont dans le dossier [`data/`](data/) et peuvent être modifiées san
 
 > ⚠️ Les valeurs nutritionnelles actuelles sont **provisoires** et doivent être validées avant le jour de l'atelier.
 
+### Photos d'exemple (prompts visuels)
+
+Les aliments de dînette ne ressemblent pas toujours à ce que YOLOE a appris avec des mots (« pig », « carrot »).
+On peut lui montrer des **photos des vrais jouets** : chaque aliment photographié reçoit une « empreinte visuelle »
+qui s'ajoute à son prompt texte. Le modèle n'est pas réentraîné.
+
+1. Mettre 3 à 5 photos par aliment dans `data/exemples_visuels/<classe_yolo>/` (le nom du dossier est le `classe_yolo` de l'aliment) ;
+2. Encadrer l'aliment sur chaque photo : `python outils/annoter_exemples.py` (un cadre est proposé, Entrée pour le valider) ;
+3. Relancer l'application : les empreintes sont calculées au démarrage, puis gardées en cache.
+
+Photographier aussi les jouets qui se ressemblent (agneau, porc, bœuf…) : sinon l'empreinte de l'un attire les autres.
+
 ## Organisation du dépôt
 
 ```
@@ -175,13 +188,15 @@ FDS_yolocuistot/
 ├── app/                   Serveur Python
 │   ├── main.py            Pages, API et flux vidéo
 │   ├── detection.py       Caméra et détection YOLOE (en tâche de fond)
+│   ├── exemples_visuels.py   Empreintes visuelles calculées à partir des photos d'exemple
 │   ├── scoring.py         Calcul du score
 │   ├── recette.py         Recette inventée par un modèle de langage, ou recette de secours
 │   ├── stockage.py        Enregistrement des scores
 │   ├── donnees.py         Lecture des fiches
 │   └── config.py          Réglages
 ├── static/                Interface web (HTML, CSS, JavaScript)
-├── data/                  Fiches profils, fiches aliments, scores de la journée
+├── data/                  Fiches profils, fiches aliments, photos d'exemple, scores de la journée
+├── outils/                Annotation des photos d'exemple, export et PDF des fiches
 ├── logos/                 Logos de la Fête de la Science et de l'Université des Antilles
 └── requirements.txt       Dépendances Python
 ```
