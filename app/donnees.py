@@ -30,5 +30,11 @@ def profil(profil_id):
     return next((p for p in profils() if p["id"] == profil_id), None)
 
 
+def contraintes():
+    """{allergie ou interdit en minuscules: [classe_yolo, ...]} : aliments qui déclenchent un malus."""
+    correspondances = _lire("contraintes_profils.json")["correspondances"]
+    return {texte.strip().lower(): classes for texte, classes in correspondances.items()}
+
+
 def cahier_des_charges():
     return _lire("cahier_des_charges.json")

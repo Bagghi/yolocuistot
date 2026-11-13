@@ -8,8 +8,11 @@
    le double de son objectif.
 4. Bonus de BONUS_BON_PROFIL points si le profil le plus proche de l'assiette (parmi tous les profils)
    est le profil tiré.
+5. Malus : MALUS_ALLERGIE points si l'assiette contient un aliment auquel la fiche est allergique,
+   MALUS_INTERDIT points si elle contient son aliment interdit (une fois chacun, quelle que soit la quantité).
+   Les aliments concernés sont listés dans data/contraintes_profils.json. Le score final ne descend pas sous 0.
 """
-from .config import BONUS_BON_PROFIL, CATEGORIES_SCORE
+from .config import BONUS_BON_PROFIL, CATEGORIES_SCORE, MALUS_ALLERGIE, MALUS_INTERDIT
 
 
 def totaux_assiette(ingredients, aliments_par_classe):
@@ -33,7 +36,24 @@ def erreur_globale(totaux, objectifs):
     return sum(ecarts(totaux, objectifs).values())
 
 
-def calculer_score(ingredients, profil_tire, profils, aliments_par_classe):
+def malus(ingredients, profil, aliments_par_classe, contraintes):
+    """Allergie et interdit de la fiche trouvés dans l'assiette, avec les points retirés."""
+    presents = [i["classe"] for i in ingredients if i["classe"] in aliments_par_classe]
+    resultat = []
+    for genre, points in (("allergie", MALUS_ALLERGIE), ("interdit", MALUS_INTERDIT)):
+        texte = (profil.get(genre) or "").strip()
+        if not texte:
+            continue
+        classes = contraintes.get(texte.lower())
+        if classes is None:  # texte absent des correspondances : on cherche un aliment qui porte ce nom
+            classes = [c for c, a in aliments_par_classe.items() if a["nom"].lower() == texte.lower()]
+        trouves = [aliments_par_classe[c]["nom"] for c in presents if c in classes]
+        if trouves:
+            resultat.append({"type": genre, "texte": texte, "points": points, "aliments": trouves})
+    return resultat
+
+
+def calculer_score(ingredients, profil_tire, profils, aliments_par_classe, contraintes=None):
     totaux = totaux_assiette(ingredients, aliments_par_classe)
     ecarts_tire = ecarts(totaux, profil_tire["objectifs"])
     erreur = sum(ecarts_tire.values())
@@ -46,12 +66,16 @@ def calculer_score(ingredients, profil_tire, profils, aliments_par_classe):
         key=lambda p: (erreur_globale(totaux, p["objectifs"]), p["id"] != profil_tire["id"]),
     )
     bonus = BONUS_BON_PROFIL if plus_proche["id"] == profil_tire["id"] else 0
+    penalites = malus(ingredients, profil_tire, aliments_par_classe, contraintes or {})
+    points_malus = sum(m["points"] for m in penalites)
 
     return {
-        "score": round(score_base + bonus, 1),
+        "score": round(max(0.0, score_base + bonus - points_malus), 1),
         "score_base": round(score_base, 1),
         "somme_objectifs": round(somme_objectifs, 1),
         "bonus_points": bonus,
+        "malus": penalites,
+        "malus_points": points_malus,
         "ecart_total": round(erreur, 1),
         "profil_plus_proche": {"id": plus_proche["id"], "nom": plus_proche["nom"]},
         "detail": [

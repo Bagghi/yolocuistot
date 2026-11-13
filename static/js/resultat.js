@@ -34,6 +34,7 @@ function afficher(resultat, profil) {
   document.getElementById("bonus").innerHTML = texteBonus(resultat)
     ? `<p class="bandeau-bonus oui">⭐ Bonus ${texteBonus(resultat)} : de toutes les fiches, c'est bien la vôtre dont votre assiette est la plus proche !</p>`
     : `<p class="bandeau-bonus non">Votre assiette se rapproche plutôt de la fiche « ${esc(resultat.profil_plus_proche.nom)} ». Pas de bonus cette fois !</p>`;
+  document.getElementById("bonus").insertAdjacentHTML("beforeend", htmlMalus(resultat));
 
   // Jauges : l'objectif est placé aux deux tiers de la piste (150 % = piste pleine).
   const libelles = Object.fromEntries(CATEGORIES);

@@ -82,6 +82,7 @@ function ouvrirVolet(score) {
     <h2 id="volet-titre">${esc(score.equipe)}</h2>
     <p class="score-geant" style="font-size:3rem;text-align:left">${nombre(score.score, 1)} <small>points</small></p>
     ${texteBonus(score) ? `<p class="bandeau-bonus oui">⭐ Bonus ${texteBonus(score)} : l'assiette correspondait bien à la fiche !</p>` : ""}
+    ${htmlMalus(score)}
     <h3>Fiche tirée</h3>
     ${profil ? carteProfil(profil) : `<p>${esc(score.profil_nom)}</p>`}
     <div class="panneau">${htmlRecette(score.recette)}</div>`;

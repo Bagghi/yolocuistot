@@ -157,14 +157,16 @@ Tous les réglages sont regroupés dans [`app/config.py`](app/config.py) :
 | `SEUIL_CONFIANCE` | Confiance minimale pour qu'un aliment soit retenu |
 | `EXEMPLES_VISUELS`, `SEUIL_CONFIANCE_VISUEL` | Utilisation des photos d'exemple (voir ci-dessous) et leur confiance minimale |
 | `BONUS_BON_PROFIL` | Points ajoutés quand l'assiette correspond le mieux à la fiche tirée (50 par défaut) |
+| `MALUS_ALLERGIE`, `MALUS_INTERDIT` | Points retirés quand l'assiette contient l'allergie ou l'interdit de la fiche (50 et 20 par défaut) |
 | `FOURNISSEURS_RECETTE` | Ordre des modèles de langage essayés pour la recette |
 | `OLLAMA_MODELE`, `GEMINI_MODELE` | Modèles de langage utilisés |
 
 Les fiches sont dans le dossier [`data/`](data/) et peuvent être modifiées sans toucher au code :
 
 - [`profils_yolo_cuistot.json`](data/profils_yolo_cuistot.json) : les 12 fiches profils et leurs objectifs nutritionnels de la journée. Les images sont dans [`logos/fiches_profils_png_haute_definition/`](logos/fiches_profils_png_haute_definition/), et `python outils/generer_pdf_fiches.py` en fait des PDF de cartes A5 à imprimer (un fichier par feuille A4 de deux cartes, logo au dos) ;
-- [`aliments.json`](data/aliments.json) : environ 140 aliments, avec leur nom, le texte cherché par YOLOE (`prompt_yolo`),
+- [`aliments.json`](data/aliments.json) : environ 159 aliments, avec leur nom, le texte cherché par YOLOE (`prompt_yolo`),
   leurs apports et l'indication des bases d'entraînement qui les contiennent (`connu_yolo`) ;
+- [`contraintes_profils.json`](data/contraintes_profils.json) : pour chaque allergie et chaque interdit des fiches, les aliments qui déclenchent le malus ;
 - [`cahier_des_charges.json`](data/cahier_des_charges.json) : règles de la cantine.
 
 > ⚠️ Les valeurs nutritionnelles actuelles sont **provisoires** et doivent être validées avant le jour de l'atelier.
@@ -210,6 +212,9 @@ FDS_yolocuistot/
 4. Le score de base est `(somme des objectifs − écart total) / somme des objectifs × 100` (minimum 0) :
    un pourcentage de réussite, 100 pour une assiette parfaite, comparable quelle que soit la fiche tirée.
 5. **Bonus de +50 points** si, parmi toutes les fiches, celle dont l'assiette est la plus proche est bien la fiche tirée par le groupe.
+6. **Malus** : −50 points si l'assiette contient un aliment auquel la personne est allergique (de quoi annuler le bonus),
+   −20 points si elle contient son aliment interdit. Chaque malus ne compte qu'une fois, et le score ne descend pas sous 0.
+   Les aliments concernés sont listés dans [`contraintes_profils.json`](data/contraintes_profils.json).
 
 
 ## Données et vie privée

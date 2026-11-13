@@ -27,9 +27,10 @@ journal = logging.getLogger(__name__)
 
 PRECISION = 16 if DEMI_PRECISION else None  # 16 bits sur la carte graphique, sinon 32 bits
 
+# Couleurs foncées et saturées : bien visibles sur l'image, et le texte blanc des étiquettes reste lisible.
 COULEURS = [
-    (230, 25, 75), (60, 180, 75), (255, 225, 25), (0, 130, 200), (245, 130, 48),
-    (145, 30, 180), (70, 240, 240), (240, 50, 230), (210, 245, 60), (0, 128, 128),
+    (220, 20, 60), (0, 110, 210), (20, 140, 60), (140, 30, 180), (215, 90, 0),
+    (0, 125, 125), (190, 20, 140), (30, 50, 160), (150, 75, 0), (0, 95, 55),
 ]
 
 

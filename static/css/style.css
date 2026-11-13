@@ -247,6 +247,7 @@ td.nombre, th.nombre { text-align: right; font-variant-numeric: tabular-nums; }
 .bandeau-bonus { margin-top: 12px; padding: 12px 16px; border-radius: 12px; font-weight: 600; }
 .bandeau-bonus.oui { background: #e6f5ec; color: #1d6b40; }
 .bandeau-bonus.non { background: var(--surface-2); color: var(--marine); }
+.bandeau-bonus.malus { background: #fdecea; color: var(--rouge); }
 .jauges { display: grid; gap: 14px; }
 .jauge-entete { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 4px; }
 .jauge-piste { position: relative; height: 18px; border-radius: 9px; background: var(--surface-2); overflow: hidden; }
@@ -268,6 +269,9 @@ td.nombre, th.nombre { text-align: right; font-variant-numeric: tabular-nums; }
 .barre-progression { height: 100%; width: 0; border-radius: 5px; background: linear-gradient(90deg, var(--orange), var(--ambre)); transition: width .3s linear; }
 .recette h3 { font-size: 1.3rem; color: var(--orange); }
 .recette ol, .recette ul { padding-left: 1.3em; }
+/* Ingrédients sur plusieurs colonnes (jusqu'à 3, selon la largeur disponible). */
+.recette ul { columns: 3 180px; column-gap: 28px; }
+.recette ul li { break-inside: avoid; }
 .recette li + li { margin-top: 4px; }
 .recette .pour { color: var(--texte-doux); margin: 0 0 8px; }
 .plat-recette + .plat-recette { margin-top: 18px; padding-top: 14px; border-top: 2px dashed var(--bordure); }

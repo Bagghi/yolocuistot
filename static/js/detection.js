@@ -25,7 +25,7 @@ function afficherAssiette() {
       return `
         <li data-classe="${esc(classe)}">
           <span class="nom">${esc(aliment.nom)}
-            <small>${esc(aliment.unite_portion)}</small>
+            <small>${esc(aliment.unite_portion)} · ${esc(apportPrincipal(aliment))}</small>
           </span>
           <button type="button" class="bouton bouton-petit" data-action="moins" aria-label="Retirer un ${esc(aliment.nom)}">−</button>
           <span class="quantite">${quantite}</span>

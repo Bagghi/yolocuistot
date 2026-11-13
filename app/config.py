@@ -14,16 +14,17 @@ PORT = 8000
 
 # Détection
 CAMERA_INDEX = 1                  # 0 = webcam par défaut, 1 = webcam USB externe, etc.
-MODELE_YOLO = "yoloe-26l-seg.pt"  # téléchargé automatiquement au premier lancement (internet requis une fois)
-                                  # Tailles : n, s, m, l, x. Sur la RTX 4060 : l ≈ 47 img/s, x ≈ 32 img/s.
+# MODELE_YOLO = "yoloe-26l-seg.pt"  # téléchargé automatiquement au premier lancement (internet requis une fois)# 
+                                    # Tailles : n, s, m, l, x. Sur la RTX 4060 : l ≈ 47 img/s, x ≈ 32 img/s.
+MODELE_YOLO = "yoloe-26x-seg.pt"                                     
 PROMPTS_TEXTE = True              # True : YOLOE pré-entraîné guidé par le champ "prompt_yolo" des fiches aliments.
                                   # False : modèle réentraîné dont les classes sont directement les "classe_yolo".
 RESOLUTION_CAMERA = (1280, 720)   # demandée à la caméra (sans réglage, OpenCV prend 640x480 et peut rogner l'image)
 TAILLE_IMAGE_YOLO = 640         # côté le plus long de l'image vue par YOLO. 960 ou 1280 : petits objets mieux vus, mais plus lent
-SEUIL_CONFIANCE = 0.40
+SEUIL_CONFIANCE = 0.50
 EXEMPLES_VISUELS = True           # True : ajoute aux prompts texte les empreintes des photos d'exemple
                                   # (data/exemples_visuels, annotées avec outils/annoter_exemples.py)
-SEUIL_CONFIANCE_VISUEL = 0.50     # confiance minimale pour les prompts visuels : leurs scores sont plus élevés
+SEUIL_CONFIANCE_VISUEL = 0.30     # confiance minimale pour les prompts visuels : leurs scores sont plus élevés
                                   # que ceux du texte, un seuil plus haut évite les confusions entre jouets
 DEVICE = None                     # None = automatique (carte graphique si disponible), "cpu" pour forcer le processeur
 DEMI_PRECISION = True             # calcul en 16 bits sur la carte graphique : presque 2 fois plus rapide, même détection
@@ -36,10 +37,13 @@ LISSAGE_IMAGES = 10              # nombre d'images sur lesquelles on lisse le co
 # Score
 CATEGORIES_SCORE = ["glucides", "fibres", "proteines", "lipides"]
 BONUS_BON_PROFIL = 50             # points ajoutés si le profil le plus proche de l'assiette est le profil tiré
+MALUS_ALLERGIE = 50               # points retirés si l'assiette contient un aliment auquel la fiche est allergique
+MALUS_INTERDIT = 20               # points retirés si l'assiette contient l'aliment interdit de la fiche
 
 # Recette : inventée par un modèle de langage. Les fournisseurs sont essayés dans l'ordre ;
 # si aucun ne répond, une recette de secours est construite sans IA (livre de recettes).
 FOURNISSEURS_RECETTE = ["gemini", "ollama"]
+PERSONNES_RECETTE = 3             # la recette donne les quantités pour ce nombre de personnes
 
 # Gemini (en ligne, offre gratuite) : clé à créer sur https://aistudio.google.com/apikey,
 # puis à mettre dans la variable d'environnement GEMINI_API_KEY (jamais dans ce fichier).

@@ -162,7 +162,7 @@ def creer_resultat(demande: DemandeResultat):
             {"classe": i["classe"], "nom": aliments[i["classe"]]["nom"], "quantite": i["quantite"]}
             for i in ingredients
         ],
-        **scoring.calculer_score(ingredients, profil, donnees.profils(), aliments),
+        **scoring.calculer_score(ingredients, profil, donnees.profils(), aliments, donnees.contraintes()),
         "cahier_des_charges": scoring.verifier_cahier_des_charges(
             ingredients, aliments, donnees.cahier_des_charges()),
         "recette": None,  # générée ensuite par /api/recette : le score s'affiche sans attendre l'IA

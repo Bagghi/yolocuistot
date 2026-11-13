@@ -22,6 +22,18 @@ const Partie = {
   },
 };
 
+// Macronutriment(s) le(s) plus présent(s) dans un aliment, sans donner les quantités :
+// ceux qui atteignent au moins 75 % du plus grand apport (ex. « surtout des glucides et des lipides »).
+const NOMS_APPORTS = { glucides: "glucides", fibres: "fibres", proteines: "protéines", lipides: "lipides" };
+function apportPrincipal(aliment) {
+  const apports = aliment.apports || {};
+  const max = Math.max(...Object.keys(NOMS_APPORTS).map((c) => apports[c] || 0));
+  if (max <= 0) return "";
+  const principaux = Object.keys(NOMS_APPORTS).filter((c) => (apports[c] || 0) >= 0.75 * max).map((c) => NOMS_APPORTS[c]);
+  const liste = principaux.length > 1 ? principaux.slice(0, -1).join(", ") + " et " + principaux.at(-1) : principaux[0];
+  return `surtout des ${liste}`;
+}
+
 function esc(valeur) {
   return String(valeur ?? "").replace(/[&<>"']/g, (c) => (
     { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
@@ -63,6 +75,13 @@ function texteBonus(resultat) {
   return "";
 }
 
+// Malus de l'assiette (allergie, interdit), un bandeau par malus.
+function htmlMalus(resultat) {
+  return (resultat.malus || []).map((m) => `
+    <p class="bandeau-bonus malus">⚠️ ${m.type === "allergie" ? "Allergie" : "Interdit"} : ${esc(m.texte)}
+      → −${nombre(m.points)} points (${esc(m.aliments.join(", "))} dans l'assiette)</p>`).join("");
+}
+
 // Allergie et interdit de la fiche, en toutes lettres.
 function contraintesProfil(profil) {
   const allergie = profil.allergie ? `Allergie : ${profil.allergie}` : "Sans allergie";
@@ -100,7 +119,7 @@ function htmlRecette(recette) {
   const plusieurs = plats.length > 1;
   return `
     <div class="recette">
-      <p class="pour">Pour : ${esc(recette.pour)}</p>
+      <p class="pour">${recette.personnes ? `Pour ${recette.personnes} personnes · fiche ${esc(recette.pour)}` : `Pour : ${esc(recette.pour)}`}</p>
       ${plats.map((p) => `
         <div class="plat-recette">
           ${plusieurs && p.service ? `<p class="service">${esc(p.service)}</p>` : ""}

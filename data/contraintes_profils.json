@@ -1,0 +1,101 @@
+{
+  "remarque": "Pour chaque allergie et chaque interdit écrits sur les fiches profils, les aliments (classe_yolo) qui déclenchent le malus. Règle suivie : l'aliment lui-même et ceux dont c'est l'ingrédient principal ; les ingrédients cachés (le lait d'une crêpe, l'œuf d'un gâteau) ne comptent pas. Un texte absent de cette liste est comparé au nom des aliments.",
+  "correspondances": {
+    "fraises": [
+      "fraise"
+    ],
+    "crevettes": [
+      "crevettes"
+    ],
+    "tomate": [
+      "tomate"
+    ],
+    "ananas": [
+      "ananas"
+    ],
+    "banane": [
+      "banane"
+    ],
+    "mangue": [
+      "mangue"
+    ],
+    "lait": [
+      "lait",
+      "yaourt",
+      "fromage",
+      "beurre",
+      "creme",
+      "chantilly",
+      "glace"
+    ],
+    "arachide": [
+      "beurre_cacahuete"
+    ],
+    "kiwi": [
+      "kiwi"
+    ],
+    "poisson": [
+      "poisson",
+      "saumon",
+      "sushi",
+      "sardine"
+    ],
+    "œuf": [
+      "oeuf",
+      "omelette",
+      "quiche"
+    ],
+    "fromage": [
+      "fromage"
+    ],
+    "pain": [
+      "pain",
+      "petit_pain",
+      "baguette",
+      "bagel",
+      "toast",
+      "pain_mais",
+      "pita",
+      "croutons",
+      "pain_perdu",
+      "sandwich"
+    ],
+    "oignon": [
+      "oignon",
+      "cive"
+    ],
+    "pastèque": [
+      "pasteque"
+    ],
+    "concombre": [
+      "concombre"
+    ],
+    "ail": [
+      "ail"
+    ],
+    "poivron": [
+      "poivron"
+    ],
+    "pomme de terre": [
+      "pomme_de_terre",
+      "frites",
+      "puree",
+      "chips"
+    ],
+    "poulet": [
+      "poulet"
+    ],
+    "maïs": [
+      "mais",
+      "pain_mais",
+      "polenta"
+    ],
+    "salade": [
+      "salade",
+      "salade_composee"
+    ],
+    "brocoli": [
+      "brocoli"
+    ]
+  }
+}
